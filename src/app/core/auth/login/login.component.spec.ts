@@ -45,8 +45,7 @@ describe('LoginComponent', () => {
 
     it('should not display error message', () => {
       expect(component.errorMessage).toBeNull();
-      const errorBanner =
-        fixture.nativeElement.querySelector('.error-banner');
+      const errorBanner = fixture.nativeElement.querySelector('.error-banner');
       expect(errorBanner).toBeNull();
     });
 
@@ -77,9 +76,7 @@ describe('LoginComponent', () => {
 
     it('should call authService.login with microsoft when Microsoft button clicked', () => {
       const loginSpy = vi.spyOn(authService, 'login');
-      const msBtn = fixture.nativeElement.querySelector(
-        '.login-btn.microsoft',
-      );
+      const msBtn = fixture.nativeElement.querySelector('.login-btn.microsoft');
 
       msBtn.click();
 
@@ -91,21 +88,17 @@ describe('LoginComponent', () => {
     beforeEach(() => createComponent({ error: 'auth_failed' }));
 
     it('should display auth failed error message', () => {
-      expect(component.errorMessage).toBe(
-        'Authentication failed. Please try again.',
-      );
+      expect(component.errorMessage).toBe('Authentication failed. Please try again.');
     });
 
     it('should render error banner in DOM', () => {
-      const errorBanner =
-        fixture.nativeElement.querySelector('.error-banner');
+      const errorBanner = fixture.nativeElement.querySelector('.error-banner');
       expect(errorBanner).toBeTruthy();
       expect(errorBanner.textContent).toContain('Authentication failed');
     });
 
     it('should have role="alert" on error banner', () => {
-      const errorBanner =
-        fixture.nativeElement.querySelector('.error-banner');
+      const errorBanner = fixture.nativeElement.querySelector('.error-banner');
       expect(errorBanner.getAttribute('role')).toBe('alert');
     });
   });

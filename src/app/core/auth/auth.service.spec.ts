@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -80,9 +77,7 @@ describe('AuthService', () => {
 
       service.login('google');
 
-      expect(window.location.href).toBe(
-        `${environment.apiUrl}/auth/login/google`,
-      );
+      expect(window.location.href).toBe(`${environment.apiUrl}/auth/login/google`);
 
       Object.defineProperty(window, 'location', {
         value: originalLocation,
@@ -102,9 +97,7 @@ describe('AuthService', () => {
 
       service.login('microsoft');
 
-      expect(window.location.href).toBe(
-        `${environment.apiUrl}/auth/login/microsoft`,
-      );
+      expect(window.location.href).toBe(`${environment.apiUrl}/auth/login/microsoft`);
 
       Object.defineProperty(window, 'location', {
         value: originalLocation,
@@ -197,9 +190,7 @@ describe('AuthService', () => {
     it('should POST to logout endpoint and clear user state', () => {
       // First, populate user state
       service.loadUser().subscribe();
-      httpMock
-        .expectOne(`${environment.apiUrl}/auth/me`)
-        .flush({ data: mockUser });
+      httpMock.expectOne(`${environment.apiUrl}/auth/me`).flush({ data: mockUser });
       expect(service.currentUser).toEqual(mockUser);
 
       const navigateSpy = vi.spyOn(router, 'navigate');
@@ -217,9 +208,7 @@ describe('AuthService', () => {
 
     it('should clear user state even if logout API fails', () => {
       service.loadUser().subscribe();
-      httpMock
-        .expectOne(`${environment.apiUrl}/auth/me`)
-        .flush({ data: mockUser });
+      httpMock.expectOne(`${environment.apiUrl}/auth/me`).flush({ data: mockUser });
 
       const navigateSpy = vi.spyOn(router, 'navigate');
 
@@ -237,9 +226,7 @@ describe('AuthService', () => {
     it('should set user state to null without API call', () => {
       // Populate user state
       service.loadUser().subscribe();
-      httpMock
-        .expectOne(`${environment.apiUrl}/auth/me`)
-        .flush({ data: mockUser });
+      httpMock.expectOne(`${environment.apiUrl}/auth/me`).flush({ data: mockUser });
       expect(service.currentUser).toEqual(mockUser);
 
       service.clearUser();

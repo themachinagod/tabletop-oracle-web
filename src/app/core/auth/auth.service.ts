@@ -24,9 +24,7 @@ export class AuthService {
   readonly user$ = this.userSubject.asObservable();
 
   /** Observable indicating whether a user is currently authenticated. */
-  readonly isAuthenticated$: Observable<boolean> = this.user$.pipe(
-    map((u) => u !== null),
-  );
+  readonly isAuthenticated$: Observable<boolean> = this.user$.pipe(map((u) => u !== null));
 
   /** Observable of the current user's role, or null if unauthenticated. */
   readonly role$: Observable<'player' | 'curator' | null> = this.user$.pipe(

@@ -28,7 +28,7 @@ jobs:
           node-version: "20"
           cache: "npm"
       - run: npm ci
-      - run: npx ng test --watch=false --browsers=ChromeHeadless --code-coverage
+      - run: npx ng test --watch=false
 
   build:
     runs-on: ubuntu-latest

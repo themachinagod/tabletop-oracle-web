@@ -8,8 +8,7 @@ type AuthError = 'auth_failed' | 'account_conflict';
 /** Human-readable error messages for each backend error code. */
 const ERROR_MESSAGES: Record<AuthError, string> = {
   auth_failed: 'Authentication failed. Please try again.',
-  account_conflict:
-    'An account with this email already exists via another provider.',
+  account_conflict: 'An account with this email already exists via another provider.',
 };
 
 /**
@@ -34,9 +33,7 @@ const ERROR_MESSAGES: Record<AuthError, string> = {
       }
 
       <div class="login-buttons">
-        <button class="login-btn google" (click)="loginWith('google')">
-          Sign in with Google
-        </button>
+        <button class="login-btn google" (click)="loginWith('google')">Sign in with Google</button>
         <button class="login-btn microsoft" (click)="loginWith('microsoft')">
           Sign in with Microsoft
         </button>

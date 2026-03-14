@@ -47,9 +47,7 @@ describe('authGuard', () => {
    * Execute the guard and resolve the result.
    * The guard returns MaybeAsync<GuardResult>.
    */
-  async function runGuard(
-    route: ActivatedRouteSnapshot,
-  ): Promise<GuardResult> {
+  async function runGuard(route: ActivatedRouteSnapshot): Promise<GuardResult> {
     const result: MaybeAsync<GuardResult> = TestBed.runInInjectionContext(() =>
       authGuard(route, createState()),
     );
@@ -61,11 +59,7 @@ describe('authGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideRouter([]),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
     });
 
     authService = TestBed.inject(AuthService);
