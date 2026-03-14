@@ -1,0 +1,17 @@
+// Design system variables — populated during implementation
+// Colors, typography, spacing, breakpoints
+
+$font-family-base:
+  'Inter',
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  Roboto,
+  sans-serif;
+$font-family-heading: 'Inter Tight', $font-family-base;
+
+// Breakpoints (mobile-first)
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
