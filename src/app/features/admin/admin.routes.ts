@@ -1,11 +1,9 @@
 import { Routes } from '@angular/router';
-import { authGuard } from '../../core/auth/auth.guard';
 
-/** Admin feature routes (protected by auth guard). */
+/** Admin feature routes (curator role enforced by parent route guard). */
 export const ADMIN_ROUTES: Routes = [
   {
     path: '',
-    canActivate: [authGuard],
     children: [
       // Admin feature routes will be added during implementation
     ],
