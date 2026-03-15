@@ -25,6 +25,20 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'games',
+        loadComponent: () =>
+          import('./features/player/game-browser/game-browser.component').then(
+            (m) => m.GameBrowserComponent,
+          ),
+      },
+      {
+        path: 'games/:gameId',
+        loadComponent: () =>
+          import('./features/player/game-detail/game-detail.component').then(
+            (m) => m.GameDetailComponent,
+          ),
+      },
+      {
         path: 'admin',
         canActivate: [authGuard],
         data: { role: 'curator' },

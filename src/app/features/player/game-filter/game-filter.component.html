@@ -1,0 +1,103 @@
+<div class="game-filter">
+  <div class="game-filter__search-row">
+    <div class="game-filter__search">
+      <input
+        type="search"
+        class="game-filter__search-input"
+        placeholder="Search games..."
+        [value]="searchText()"
+        (input)="onSearchInput($any($event.target).value)"
+        aria-label="Search games by name"
+      />
+    </div>
+
+    <select
+      class="game-filter__sort"
+      [value]="currentSort()"
+      (change)="onSortChange($any($event.target).value)"
+      aria-label="Sort games"
+    >
+      @for (option of sortOptions; track option.value) {
+        <option [value]="option.value">{{ option.label }}</option>
+      }
+    </select>
+
+    <button
+      class="game-filter__toggle-btn"
+      type="button"
+      (click)="toggleFilters()"
+      [attr.aria-expanded]="filtersExpanded()"
+      aria-controls="game-filter-panel"
+    >
+      Filters
+      @if (hasActiveFilters) {
+        <span class="game-filter__active-indicator" aria-label="Filters active"></span>
+      }
+    </button>
+  </div>
+
+  <div
+    id="game-filter-panel"
+    class="game-filter__panel"
+    [class.game-filter__panel--expanded]="filtersExpanded()"
+  >
+    <div class="game-filter__group">
+      <label class="game-filter__label" for="player-count-input">Player Count</label>
+      <input
+        id="player-count-input"
+        type="number"
+        class="game-filter__player-input"
+        placeholder="e.g. 4"
+        min="1"
+        [value]="playerCount()"
+        (input)="onPlayerCountChange($any($event.target).value)"
+        aria-label="Filter by player count"
+      />
+    </div>
+
+    <div class="game-filter__group">
+      <span class="game-filter__label">Complexity</span>
+      <div class="game-filter__chips" role="group" aria-label="Complexity filter">
+        @for (level of complexityLevels; track level) {
+          <button
+            type="button"
+            class="game-filter__chip"
+            [class.game-filter__chip--selected]="isComplexitySelected(level)"
+            [class.game-filter__chip--light]="level === 'light'"
+            [class.game-filter__chip--medium]="level === 'medium'"
+            [class.game-filter__chip--heavy]="level === 'heavy'"
+            (click)="toggleComplexity(level)"
+            [attr.aria-pressed]="isComplexitySelected(level)"
+          >
+            {{ capitalise(level) }}
+          </button>
+        }
+      </div>
+    </div>
+
+    @if (availableTags.length > 0) {
+      <div class="game-filter__group">
+        <span class="game-filter__label">Tags</span>
+        <div class="game-filter__chips" role="group" aria-label="Tag filter">
+          @for (tagCount of availableTags; track tagCount.tag) {
+            <button
+              type="button"
+              class="game-filter__tag-chip"
+              [class.game-filter__tag-chip--selected]="isTagSelected(tagCount.tag)"
+              (click)="toggleTag(tagCount.tag)"
+              [attr.aria-pressed]="isTagSelected(tagCount.tag)"
+            >
+              {{ tagCount.tag }} ({{ tagCount.count }})
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    @if (hasActiveFilters) {
+      <button type="button" class="game-filter__clear" (click)="clearFilters()">
+        Clear Filters
+      </button>
+    }
+  </div>
+</div>

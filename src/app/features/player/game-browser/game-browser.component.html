@@ -1,0 +1,51 @@
+<section class="game-browser">
+  <header class="game-browser__header">
+    <h1 class="game-browser__title">Games</h1>
+  </header>
+
+  @if (error()) {
+    <app-error-banner [message]="error()!" (dismissed)="dismissError()" />
+  }
+
+  @if (loading() && games().length === 0) {
+    <app-loading-spinner message="Loading games..." />
+  } @else {
+    <app-game-filter
+      [availableTags]="availableTags()"
+      (filtersChanged)="onFiltersChanged($event)"
+    />
+
+    @if (loading()) {
+      <app-loading-spinner message="Loading games..." />
+    } @else if (games().length === 0) {
+      @if (hasActiveFilters()) {
+        <app-empty-state message="No games match your search. Try adjusting your filters." />
+      } @else {
+        <app-empty-state
+          message="No games are available yet. A curator needs to add games before you can start a session."
+        />
+      }
+    } @else {
+      <div class="game-browser__grid">
+        @for (game of games(); track game.id) {
+          <div
+            class="game-browser__card-wrapper"
+            (click)="onGameSelected(game)"
+            (keydown.enter)="onGameSelected(game)"
+            tabindex="0"
+            role="link"
+            [attr.aria-label]="'View details for ' + game.name"
+          >
+            <app-game-card [game]="game" />
+          </div>
+        }
+      </div>
+
+      @if (pagination(); as pag) {
+        @if (pag.total_pages > 1) {
+          <app-pagination [pagination]="pag" (pageChange)="onPageChange($event)" />
+        }
+      }
+    }
+  }
+</section>
