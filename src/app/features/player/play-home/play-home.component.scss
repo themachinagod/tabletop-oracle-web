@@ -1,0 +1,147 @@
+@use 'variables' as *;
+
+.play-home {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: $spacing-lg $spacing-md;
+}
+
+.play-home__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.play-home__title {
+  font-family: $font-family-heading;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+.play-home__new-session {
+  background: $color-accent-primary;
+  color: $color-text-primary;
+  border: none;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  min-height: $touch-target-min;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background: $color-accent-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.play-home__filters {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+}
+
+.play-home__filter-label {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  white-space: nowrap;
+}
+
+.play-home__game-select {
+  flex: 1;
+  max-width: 280px;
+  background: $color-bg-surface;
+  color: $color-text-primary;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  padding: $spacing-sm $spacing-md;
+  font-size: $font-size-sm;
+  min-height: $touch-target-min;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+
+  option {
+    background: $color-bg-secondary;
+    color: $color-text-primary;
+  }
+}
+
+.play-home__archived-toggle {
+  margin-top: $spacing-xl;
+  padding-top: $spacing-md;
+  border-top: 1px solid $color-border;
+}
+
+.play-home__toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  min-height: $touch-target-min;
+}
+
+.play-home__toggle-input {
+  width: 18px;
+  height: 18px;
+  accent-color: $color-accent-primary;
+  cursor: pointer;
+}
+
+.play-home__toggle-text {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.play-home__section-title {
+  font-family: $font-family-heading;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-secondary;
+  margin: $spacing-lg 0 $spacing-md;
+}
+
+.play-home__no-archived {
+  font-size: $font-size-sm;
+  color: $color-text-muted;
+  text-align: center;
+  padding: $spacing-lg 0;
+}
+
+// Responsive adjustments
+@media (max-width: $breakpoint-sm) {
+  .play-home {
+    padding: $spacing-md $spacing-sm;
+  }
+
+  .play-home__header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: $spacing-sm;
+  }
+
+  .play-home__new-session {
+    text-align: center;
+  }
+
+  .play-home__filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .play-home__game-select {
+    max-width: none;
+  }
+}
