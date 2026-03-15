@@ -5,7 +5,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
  *
  * Used for archive/delete actions that require user confirmation.
  * Renders a centered dialog with a backdrop overlay. Supports keyboard
- * navigation (Escape to cancel) and focus trapping.
+ * dismissal (Escape to cancel) and overlay click to cancel.
  */
 @Component({
   selector: 'app-confirm-dialog',

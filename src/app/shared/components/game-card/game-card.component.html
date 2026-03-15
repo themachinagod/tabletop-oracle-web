@@ -30,7 +30,7 @@
 
     @if (game.tags.length > 0) {
       <div class="game-card__tags">
-        @for (tag of visibleTags; track tag) {
+        @for (tag of visibleTags; track $index) {
           <app-tag-chip [tag]="tag" />
         }
         @if (hiddenTagCount > 0) {
