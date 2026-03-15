@@ -1,0 +1,46 @@
+@use 'variables' as *;
+
+// ── Spacing Mixins ──────────────────────────────────────────────────
+
+@mixin stack($size: $spacing-md) {
+  display: flex;
+  flex-direction: column;
+  gap: $size;
+}
+
+@mixin row($size: $spacing-md) {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: $size;
+}
+
+@mixin responsive-padding {
+  padding: $spacing-md;
+
+  @media (min-width: $breakpoint-md) {
+    padding: $spacing-lg;
+  }
+
+  @media (min-width: $breakpoint-lg) {
+    padding: $spacing-xl;
+  }
+}
+
+@mixin responsive-grid($min-width: 280px) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($min-width, 1fr));
+  gap: $spacing-md;
+}
+
+@mixin container {
+  width: 100%;
+  max-width: $breakpoint-xl;
+  margin: 0 auto;
+  @include responsive-padding;
+}
+
+@mixin touch-target {
+  min-height: $touch-target-min;
+  min-width: $touch-target-min;
+}

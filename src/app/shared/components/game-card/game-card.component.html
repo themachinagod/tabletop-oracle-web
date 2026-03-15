@@ -1,0 +1,53 @@
+<article class="game-card">
+  <div class="game-card__image">
+    @if (game.cover_image_url) {
+      <img
+        [src]="game.cover_image_url"
+        [alt]="game.name + ' cover image'"
+        class="game-card__cover"
+        loading="lazy"
+      />
+    } @else {
+      <div class="game-card__placeholder" aria-hidden="true">🎲</div>
+    }
+  </div>
+
+  <div class="game-card__body">
+    <h3 class="game-card__name">{{ game.name }}</h3>
+
+    @if (publisherYear) {
+      <p class="game-card__publisher">{{ publisherYear }}</p>
+    }
+
+    <div class="game-card__meta">
+      @if (playerCountDisplay) {
+        <span class="game-card__players">{{ playerCountDisplay }}</span>
+      }
+      @if (game.complexity) {
+        <app-complexity-badge [level]="game.complexity" />
+      }
+    </div>
+
+    @if (game.tags.length > 0) {
+      <div class="game-card__tags">
+        @for (tag of visibleTags; track tag) {
+          <app-tag-chip [tag]="tag" />
+        }
+        @if (hiddenTagCount > 0) {
+          <span class="game-card__more-tags">+{{ hiddenTagCount }} more</span>
+        }
+      </div>
+    }
+
+    <div class="game-card__counts">
+      <span class="game-card__count" [attr.aria-label]="game.document_count + ' documents'">
+        📄 {{ game.document_count }}
+      </span>
+      @if (game.expansion_count > 0) {
+        <span class="game-card__count" [attr.aria-label]="game.expansion_count + ' expansions'">
+          📦 {{ game.expansion_count }}
+        </span>
+      }
+    </div>
+  </div>
+</article>

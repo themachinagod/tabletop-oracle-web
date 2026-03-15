@@ -1,0 +1,40 @@
+@use 'variables' as *;
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-md;
+  padding: $spacing-xxl $spacing-lg;
+  text-align: center;
+
+  &__icon {
+    font-size: 3rem;
+    line-height: 1;
+    opacity: 0.5;
+  }
+
+  &__message {
+    font-size: $font-size-base;
+    color: $color-text-muted;
+    max-width: 400px;
+  }
+
+  &__action {
+    min-height: $touch-target-min;
+    padding: $spacing-sm $spacing-lg;
+    background-color: $color-accent-primary;
+    color: $color-text-primary;
+    border: none;
+    border-radius: $radius-md;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background-color: $color-accent-hover;
+    }
+  }
+}

@@ -1,0 +1,43 @@
+<article class="session-card">
+  <div class="session-card__thumbnail">
+    @if (session.game_cover_image_url) {
+      <img
+        [src]="session.game_cover_image_url"
+        [alt]="session.game_name + ' cover'"
+        class="session-card__cover"
+        loading="lazy"
+      />
+    } @else {
+      <div class="session-card__placeholder" aria-hidden="true">🎲</div>
+    }
+  </div>
+
+  <div class="session-card__body">
+    <div class="session-card__header">
+      <h3 class="session-card__name">{{ session.name }}</h3>
+      <span class="session-card__time">{{ session.last_active_at | relativeTime }}</span>
+    </div>
+
+    <p class="session-card__game-name">{{ session.game_name }}</p>
+
+    <div class="session-card__meta">
+      @if (session.expansions.length > 0) {
+        <div class="session-card__expansions">
+          @for (expansion of session.expansions; track expansion.id) {
+            <span class="session-card__expansion-badge">{{ expansion.name }}</span>
+          }
+        </div>
+      }
+
+      @if (session.player_count) {
+        <span class="session-card__players">{{ session.player_count }} players</span>
+      }
+    </div>
+
+    @if (session.last_message_preview) {
+      <p class="session-card__preview">
+        {{ session.last_message_preview | truncate: previewLength }}
+      </p>
+    }
+  </div>
+</article>

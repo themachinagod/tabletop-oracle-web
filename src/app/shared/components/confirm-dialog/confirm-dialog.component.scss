@@ -1,0 +1,80 @@
+@use 'variables' as *;
+
+.confirm-dialog {
+  background-color: $color-bg-secondary;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  max-width: 400px;
+  width: calc(100% - 2 * $spacing-lg);
+  box-shadow: $shadow-lg;
+
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $color-overlay;
+    z-index: 1000;
+  }
+
+  &__title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__message {
+    font-size: $font-size-sm;
+    color: $color-text-muted;
+    margin-bottom: $spacing-lg;
+    line-height: $line-height-base;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $spacing-sm;
+  }
+
+  &__cancel,
+  &__confirm {
+    min-height: $touch-target-min;
+    padding: $spacing-sm $spacing-lg;
+    border-radius: $radius-md;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+  }
+
+  &__cancel {
+    background: none;
+    border: 1px solid $color-border-strong;
+    color: $color-text-secondary;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  &__confirm {
+    background-color: $color-accent-primary;
+    border: none;
+    color: $color-text-primary;
+
+    &:hover {
+      background-color: $color-accent-hover;
+    }
+
+    &--destructive {
+      background-color: $color-error;
+
+      &:hover {
+        background-color: #d32f2f;
+      }
+    }
+  }
+}
