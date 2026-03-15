@@ -1,0 +1,38 @@
+@use 'variables' as *;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-md;
+
+  &__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: $touch-target-min;
+    min-width: $touch-target-min;
+    background: none;
+    border: 1px solid $color-border-strong;
+    border-radius: $radius-md;
+    color: $color-text-secondary;
+    font-size: $font-size-lg;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+
+  &__info {
+    font-size: $font-size-sm;
+    color: $color-text-muted;
+    white-space: nowrap;
+  }
+}

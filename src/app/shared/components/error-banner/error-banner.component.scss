@@ -1,0 +1,38 @@
+@use 'variables' as *;
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background-color: $color-error-bg;
+  border: 1px solid $color-error;
+  border-radius: $radius-md;
+  color: $color-error;
+  font-size: $font-size-sm;
+
+  &__message {
+    flex: 1;
+  }
+
+  &__dismiss {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: $touch-target-min;
+    min-width: $touch-target-min;
+    background: none;
+    border: none;
+    color: $color-error;
+    font-size: $font-size-lg;
+    cursor: pointer;
+    border-radius: $radius-sm;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background-color: rgba(244, 67, 54, 0.1);
+    }
+  }
+}

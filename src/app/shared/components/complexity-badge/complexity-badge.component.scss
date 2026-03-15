@@ -1,0 +1,26 @@
+@use 'variables' as *;
+
+.complexity-badge {
+  display: inline-block;
+  padding: 2px $spacing-sm;
+  border-radius: $radius-pill;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-base;
+  white-space: nowrap;
+
+  &--light {
+    background-color: $color-complexity-light-bg;
+    color: $color-complexity-light;
+  }
+
+  &--medium {
+    background-color: $color-complexity-medium-bg;
+    color: $color-complexity-medium;
+  }
+
+  &--heavy {
+    background-color: $color-complexity-heavy-bg;
+    color: $color-complexity-heavy;
+  }
+}
