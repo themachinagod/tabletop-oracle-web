@@ -14,10 +14,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DocumentProcessingService } from '../../../core/services/document-processing.service';
 import { DocumentStatus } from '../../../models/document.model';
-import {
-  ProcessingEvent,
-  PROCESSING_STAGE_LABELS,
-} from '../../../models/processing-event.model';
+import { ProcessingEvent, PROCESSING_STAGE_LABELS } from '../../../models/processing-event.model';
 
 /**
  * Live document processing status indicator.
@@ -108,7 +105,9 @@ export class DocumentProcessingStatusComponent implements OnInit, OnChanges {
         error: () => {
           this.isStreaming.set(false);
           this.sseActive = false;
-          this.connectionError.set('Lost connection to processing stream. Refresh to check status.');
+          this.connectionError.set(
+            'Lost connection to processing stream. Refresh to check status.',
+          );
         },
         complete: () => {
           this.isStreaming.set(false);

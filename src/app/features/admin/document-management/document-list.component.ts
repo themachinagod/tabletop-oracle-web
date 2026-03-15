@@ -172,9 +172,7 @@ export class DocumentListComponent implements OnInit {
    * from the API.
    */
   private watchProcessingDocuments(docs: DocumentSummary[]): void {
-    const processingDocs = docs.filter(
-      (d) => d.status === 'uploaded' || d.status === 'parsing',
-    );
+    const processingDocs = docs.filter((d) => d.status === 'uploaded' || d.status === 'parsing');
 
     for (const doc of processingDocs) {
       if (this.processingSubscriptions.has(doc.id)) continue;
