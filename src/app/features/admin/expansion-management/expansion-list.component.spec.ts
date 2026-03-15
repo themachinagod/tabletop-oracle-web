@@ -41,9 +41,7 @@ describe('ExpansionListComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [ExpansionListComponent],
-      providers: [
-        { provide: AdminExpansionService, useValue: mockExpansionService },
-      ],
+      providers: [{ provide: AdminExpansionService, useValue: mockExpansionService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ExpansionListComponent);
@@ -62,9 +60,7 @@ describe('ExpansionListComponent', () => {
     });
 
     it('ngOnInit_ApiError_SetsErrorMessage', () => {
-      mockExpansionService.listExpansions.mockReturnValue(
-        throwError(() => new Error('fail')),
-      );
+      mockExpansionService.listExpansions.mockReturnValue(throwError(() => new Error('fail')));
       fixture.detectChanges();
 
       expect(component.error()).toBe('Failed to load expansions. Please try again.');
@@ -104,9 +100,7 @@ describe('ExpansionListComponent', () => {
     });
 
     it('onFormSaved_CreateError_SetsErrorMessage', () => {
-      mockExpansionService.createExpansion.mockReturnValue(
-        throwError(() => new Error('fail')),
-      );
+      mockExpansionService.createExpansion.mockReturnValue(throwError(() => new Error('fail')));
       fixture.detectChanges();
       component.openCreateForm();
 
@@ -133,18 +127,14 @@ describe('ExpansionListComponent', () => {
 
       component.onFormSaved({ name: 'Updated Seafarers' });
 
-      expect(mockExpansionService.updateExpansion).toHaveBeenCalledWith(
-        'game-1',
-        'exp-1',
-        { name: 'Updated Seafarers' },
-      );
+      expect(mockExpansionService.updateExpansion).toHaveBeenCalledWith('game-1', 'exp-1', {
+        name: 'Updated Seafarers',
+      });
       expect(component.showForm()).toBe(false);
     });
 
     it('onFormSaved_UpdateError_SetsErrorMessage', () => {
-      mockExpansionService.updateExpansion.mockReturnValue(
-        throwError(() => new Error('fail')),
-      );
+      mockExpansionService.updateExpansion.mockReturnValue(throwError(() => new Error('fail')));
       fixture.detectChanges();
       component.openEditForm(mockExpansion);
 
@@ -187,9 +177,7 @@ describe('ExpansionListComponent', () => {
     });
 
     it('onArchiveConfirmed_ApiError_SetsErrorMessage', () => {
-      mockExpansionService.archiveExpansion.mockReturnValue(
-        throwError(() => new Error('fail')),
-      );
+      mockExpansionService.archiveExpansion.mockReturnValue(throwError(() => new Error('fail')));
       fixture.detectChanges();
       component.confirmArchive(mockExpansion);
 
@@ -224,18 +212,13 @@ describe('ExpansionListComponent', () => {
 
       component.onRestoreConfirmed();
 
-      expect(mockExpansionService.restoreExpansion).toHaveBeenCalledWith(
-        'game-1',
-        'exp-2',
-      );
+      expect(mockExpansionService.restoreExpansion).toHaveBeenCalledWith('game-1', 'exp-2');
       expect(component.restoreTarget()).toBeNull();
       expect(component.actionInProgress()).toBe(false);
     });
 
     it('onRestoreConfirmed_ApiError_SetsErrorMessage', () => {
-      mockExpansionService.restoreExpansion.mockReturnValue(
-        throwError(() => new Error('fail')),
-      );
+      mockExpansionService.restoreExpansion.mockReturnValue(throwError(() => new Error('fail')));
       fixture.detectChanges();
       component.confirmRestore(archivedExpansion);
 
@@ -257,9 +240,7 @@ describe('ExpansionListComponent', () => {
 
   describe('error handling', () => {
     it('dismissError_ClearsError', () => {
-      mockExpansionService.listExpansions.mockReturnValue(
-        throwError(() => new Error('fail')),
-      );
+      mockExpansionService.listExpansions.mockReturnValue(throwError(() => new Error('fail')));
       fixture.detectChanges();
 
       component.dismissError();

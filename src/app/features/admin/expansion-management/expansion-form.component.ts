@@ -86,19 +86,11 @@ import { ExpansionCreate, ExpansionDetail } from '../../../models/game.model';
             </div>
 
             <div class="expansion-form__actions">
-              <button
-                class="expansion-form__cancel-btn"
-                type="button"
-                (click)="onCancel()"
-              >
+              <button class="expansion-form__cancel-btn" type="button" (click)="onCancel()">
                 Cancel
               </button>
-              <button
-                class="expansion-form__submit-btn"
-                type="submit"
-                [disabled]="submitting"
-              >
-                {{ submitting ? 'Saving...' : (expansion ? 'Save Changes' : 'Add Expansion') }}
+              <button class="expansion-form__submit-btn" type="submit" [disabled]="submitting">
+                {{ submitting ? 'Saving...' : expansion ? 'Save Changes' : 'Add Expansion' }}
               </button>
             </div>
           </form>

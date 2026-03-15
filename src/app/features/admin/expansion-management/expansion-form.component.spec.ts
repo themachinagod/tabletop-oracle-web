@@ -85,8 +85,18 @@ describe('ExpansionFormComponent', () => {
       component.open = true;
       component.expansion = mockExpansion;
       component.ngOnChanges({
-        open: { currentValue: true, previousValue: false, firstChange: true, isFirstChange: () => true },
-        expansion: { currentValue: mockExpansion, previousValue: null, firstChange: true, isFirstChange: () => true },
+        open: {
+          currentValue: true,
+          previousValue: false,
+          firstChange: true,
+          isFirstChange: () => true,
+        },
+        expansion: {
+          currentValue: mockExpansion,
+          previousValue: null,
+          firstChange: true,
+          isFirstChange: () => true,
+        },
       });
 
       expect(component.form.get('name')?.value).toBe('Seafarers');
@@ -132,7 +142,12 @@ describe('ExpansionFormComponent', () => {
       component.open = true;
       component.expansion = null;
       component.ngOnChanges({
-        open: { currentValue: true, previousValue: false, firstChange: false, isFirstChange: () => false },
+        open: {
+          currentValue: true,
+          previousValue: false,
+          firstChange: false,
+          isFirstChange: () => false,
+        },
       });
 
       expect(component.form.get('name')?.value).toBe('');

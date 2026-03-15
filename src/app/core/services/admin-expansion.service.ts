@@ -47,10 +47,7 @@ export class AdminExpansionService {
     expansionId: string,
     updates: ExpansionUpdate,
   ): Observable<ExpansionDetail> {
-    return this.api.patch<ExpansionDetail>(
-      `/games/${gameId}/expansions/${expansionId}`,
-      updates,
-    );
+    return this.api.patch<ExpansionDetail>(`/games/${gameId}/expansions/${expansionId}`, updates);
   }
 
   /**
@@ -61,10 +58,7 @@ export class AdminExpansionService {
    * @returns Observable of the archived expansion detail.
    */
   archiveExpansion(gameId: string, expansionId: string): Observable<ExpansionDetail> {
-    return this.api.post<ExpansionDetail>(
-      `/games/${gameId}/expansions/${expansionId}/archive`,
-      {},
-    );
+    return this.api.post<ExpansionDetail>(`/games/${gameId}/expansions/${expansionId}/archive`, {});
   }
 
   /**
@@ -75,9 +69,6 @@ export class AdminExpansionService {
    * @returns Observable of the restored expansion detail.
    */
   restoreExpansion(gameId: string, expansionId: string): Observable<ExpansionDetail> {
-    return this.api.post<ExpansionDetail>(
-      `/games/${gameId}/expansions/${expansionId}/restore`,
-      {},
-    );
+    return this.api.post<ExpansionDetail>(`/games/${gameId}/expansions/${expansionId}/restore`, {});
   }
 }

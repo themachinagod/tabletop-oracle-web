@@ -68,18 +68,16 @@ describe('AdminExpansionService', () => {
     it('createExpansion_ApiError_PropagatesError', async () => {
       mockApi.post.mockReturnValue(throwError(() => new Error('Validation error')));
 
-      await expect(
-        firstValueFrom(service.createExpansion('game-1', { name: '' })),
-      ).rejects.toThrow('Validation error');
+      await expect(firstValueFrom(service.createExpansion('game-1', { name: '' }))).rejects.toThrow(
+        'Validation error',
+      );
     });
   });
 
   describe('updateExpansion', () => {
     it('updateExpansion_ValidPayload_PatchesAndReturnsExpansion', async () => {
       const updates = { name: 'Updated Seafarers' };
-      const result = await firstValueFrom(
-        service.updateExpansion('game-1', 'exp-1', updates),
-      );
+      const result = await firstValueFrom(service.updateExpansion('game-1', 'exp-1', updates));
 
       expect(result).toEqual(mockExpansion);
       expect(mockApi.patch).toHaveBeenCalledWith('/games/game-1/expansions/exp-1', updates);
@@ -100,18 +98,15 @@ describe('AdminExpansionService', () => {
       const result = await firstValueFrom(service.archiveExpansion('game-1', 'exp-1'));
 
       expect(result).toEqual(archivedExpansion);
-      expect(mockApi.post).toHaveBeenCalledWith(
-        '/games/game-1/expansions/exp-1/archive',
-        {},
-      );
+      expect(mockApi.post).toHaveBeenCalledWith('/games/game-1/expansions/exp-1/archive', {});
     });
 
     it('archiveExpansion_ApiError_PropagatesError', async () => {
       mockApi.post.mockReturnValue(throwError(() => new Error('Server error')));
 
-      await expect(
-        firstValueFrom(service.archiveExpansion('game-1', 'exp-1')),
-      ).rejects.toThrow('Server error');
+      await expect(firstValueFrom(service.archiveExpansion('game-1', 'exp-1'))).rejects.toThrow(
+        'Server error',
+      );
     });
   });
 
@@ -120,18 +115,15 @@ describe('AdminExpansionService', () => {
       const result = await firstValueFrom(service.restoreExpansion('game-1', 'exp-1'));
 
       expect(result).toEqual(mockExpansion);
-      expect(mockApi.post).toHaveBeenCalledWith(
-        '/games/game-1/expansions/exp-1/restore',
-        {},
-      );
+      expect(mockApi.post).toHaveBeenCalledWith('/games/game-1/expansions/exp-1/restore', {});
     });
 
     it('restoreExpansion_ApiError_PropagatesError', async () => {
       mockApi.post.mockReturnValue(throwError(() => new Error('Server error')));
 
-      await expect(
-        firstValueFrom(service.restoreExpansion('game-1', 'exp-1')),
-      ).rejects.toThrow('Server error');
+      await expect(firstValueFrom(service.restoreExpansion('game-1', 'exp-1'))).rejects.toThrow(
+        'Server error',
+      );
     });
   });
 });
