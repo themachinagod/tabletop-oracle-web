@@ -1,0 +1,59 @@
+<div class="usage-dashboard">
+  <div class="usage-dashboard__header">
+    <h1 class="usage-dashboard__title">Usage Dashboard</h1>
+    <div class="usage-dashboard__period-selector" role="group" aria-label="Period selector">
+      @for (period of periodOptions; track period) {
+        <button
+          class="usage-dashboard__period-btn"
+          [class.usage-dashboard__period-btn--active]="period === selectedPeriod()"
+          (click)="onPeriodChange(period)"
+          type="button"
+        >
+          {{ periodOptionLabel(period) }}
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (error()) {
+    <app-error-banner [message]="error()!" (dismissed)="retry()" />
+  } @else if (loading()) {
+    <app-loading-spinner message="Loading dashboard data..." />
+  } @else {
+    @if (summary()) {
+      <app-usage-summary-cards [summary]="summary()!" [periodLabel]="periodLabel()" />
+    }
+
+    @if (trends(); as trendData) {
+      @if (trendData.length > 0) {
+        <app-usage-trend-chart [trends]="trendData" />
+      }
+    }
+
+    <div class="usage-dashboard__grid">
+      <div class="usage-dashboard__grid-item">
+        @if (guardrailStatus()) {
+          <app-guardrail-status [status]="guardrailStatus()!" />
+        }
+      </div>
+
+      <div class="usage-dashboard__grid-item">
+        @if (modelSlots()) {
+          <app-active-model-config [slots]="modelSlots()!" />
+        }
+      </div>
+    </div>
+
+    @if (byCapability()) {
+      <app-capability-breakdown [data]="byCapability()!" />
+    }
+
+    @if (byGame()) {
+      <app-game-breakdown [data]="byGame()!" />
+    }
+
+    @if (qualityMetrics()) {
+      <app-quality-metrics [data]="qualityMetrics()!" />
+    }
+  }
+</div>

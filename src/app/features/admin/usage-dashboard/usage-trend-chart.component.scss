@@ -1,0 +1,63 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.trend-chart {
+  background: $color-bg-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+}
+
+.trend-chart__title {
+  @include heading-md;
+  color: $color-text-primary;
+  margin: 0 0 $spacing-md 0;
+}
+
+.trend-chart__chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 200px;
+  padding: $spacing-sm 0;
+  border-bottom: 1px solid $color-border;
+}
+
+.trend-chart__bar-container {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  cursor: pointer;
+
+  &:hover .trend-chart__bar {
+    background: $color-accent-hover;
+  }
+}
+
+.trend-chart__bar {
+  width: 100%;
+  min-height: 2px;
+  background: $color-accent-primary;
+  border-radius: $radius-sm $radius-sm 0 0;
+  transition: background $transition-fast;
+}
+
+.trend-chart__axis {
+  display: flex;
+  justify-content: space-between;
+  padding-top: $spacing-xs;
+  @include body-xs;
+  color: $color-text-muted;
+}
+
+.trend-chart__legend {
+  margin-top: $spacing-sm;
+  text-align: center;
+}
+
+.trend-chart__legend-item {
+  @include body-sm;
+  color: $color-text-muted;
+}

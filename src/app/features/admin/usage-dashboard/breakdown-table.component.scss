@@ -1,0 +1,56 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.breakdown {
+  background: $color-bg-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+}
+
+.breakdown__title {
+  @include heading-md;
+  color: $color-text-primary;
+  margin: 0 0 $spacing-md 0;
+}
+
+.breakdown__table-wrap {
+  overflow-x: auto;
+}
+
+.breakdown__table {
+  width: 100%;
+  border-collapse: collapse;
+  @include body-sm;
+
+  th,
+  td {
+    padding: $spacing-sm $spacing-md;
+    text-align: left;
+    border-bottom: 1px solid $color-border;
+  }
+
+  th {
+    color: $color-text-muted;
+    font-weight: $font-weight-medium;
+    white-space: nowrap;
+  }
+
+  td {
+    color: $color-text-secondary;
+  }
+
+  tbody tr:hover {
+    background: $color-accent-muted;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.breakdown__num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}

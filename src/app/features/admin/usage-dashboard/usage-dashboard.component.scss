@@ -1,0 +1,72 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.usage-dashboard {
+  padding: $spacing-lg;
+  max-width: 1200px;
+}
+
+.usage-dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-xl;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+}
+
+.usage-dashboard__title {
+  @include heading-xl;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+.usage-dashboard__period-selector {
+  display: flex;
+  gap: 0;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.usage-dashboard__period-btn {
+  @include body-sm;
+  background: transparent;
+  border: none;
+  color: $color-text-muted;
+  padding: $spacing-sm $spacing-md;
+  cursor: pointer;
+  transition:
+    background $transition-fast,
+    color $transition-fast;
+  white-space: nowrap;
+
+  &:hover {
+    background: $color-accent-muted;
+    color: $color-text-primary;
+  }
+
+  &--active {
+    background: $color-accent-primary;
+    color: $color-text-primary;
+    font-weight: $font-weight-medium;
+  }
+
+  & + & {
+    border-left: 1px solid $color-border;
+  }
+}
+
+.usage-dashboard__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: $spacing-md;
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.usage-dashboard__grid-item {
+  min-width: 0;
+}
