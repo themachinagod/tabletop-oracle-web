@@ -1,0 +1,142 @@
+<form class="game-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="game-form__field">
+    <label class="game-form__label" for="name">
+      Name <span class="game-form__required">*</span>
+    </label>
+    <input
+      id="name"
+      class="game-form__input"
+      [class.game-form__input--error]="hasError('name')"
+      formControlName="name"
+      type="text"
+      placeholder="Enter game name"
+      aria-required="true"
+    />
+    @if (hasError('name')) {
+      <span class="game-form__error" role="alert">Game name is required.</span>
+    }
+  </div>
+
+  <div class="game-form__field">
+    <label class="game-form__label" for="publisher">Publisher</label>
+    <input
+      id="publisher"
+      class="game-form__input"
+      formControlName="publisher"
+      type="text"
+      placeholder="Publisher name"
+    />
+  </div>
+
+  <div class="game-form__row">
+    <div class="game-form__field">
+      <label class="game-form__label" for="year_published">Year Published</label>
+      <input
+        id="year_published"
+        class="game-form__input"
+        formControlName="year_published"
+        type="number"
+        placeholder="e.g. 2024"
+      />
+    </div>
+
+    <div class="game-form__field">
+      <label class="game-form__label" for="edition">Edition</label>
+      <input
+        id="edition"
+        class="game-form__input"
+        formControlName="edition"
+        type="text"
+        placeholder="e.g. 2nd Edition"
+      />
+    </div>
+  </div>
+
+  <div class="game-form__row">
+    <div class="game-form__field">
+      <label class="game-form__label" for="min_players">Min Players</label>
+      <input
+        id="min_players"
+        class="game-form__input"
+        [class.game-form__input--error]="playerRangeError()"
+        formControlName="min_players"
+        type="number"
+        min="1"
+        placeholder="Min"
+      />
+    </div>
+
+    <div class="game-form__field">
+      <label class="game-form__label" for="max_players">Max Players</label>
+      <input
+        id="max_players"
+        class="game-form__input"
+        [class.game-form__input--error]="playerRangeError()"
+        formControlName="max_players"
+        type="number"
+        min="1"
+        placeholder="Max"
+      />
+    </div>
+  </div>
+
+  @if (playerRangeError()) {
+    <span class="game-form__error" role="alert"> Min players must not exceed max players. </span>
+  }
+
+  <div class="game-form__field">
+    <label class="game-form__label" for="complexity">Complexity</label>
+    <select id="complexity" class="game-form__select" formControlName="complexity">
+      <option [ngValue]="null">-- Select --</option>
+      @for (option of complexityOptions; track option.value) {
+        <option [ngValue]="option.value">{{ option.label }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="game-form__field">
+    <label class="game-form__label" for="description">Description</label>
+    <textarea
+      id="description"
+      class="game-form__textarea"
+      formControlName="description"
+      placeholder="Brief description of the game"
+      rows="4"
+    ></textarea>
+  </div>
+
+  <div class="game-form__field">
+    <label class="game-form__label" for="tagInput">Tags</label>
+    <div class="game-form__tags-wrapper">
+      @for (tag of tags(); track tag) {
+        <span class="game-form__tag">
+          {{ tag }}
+          <button
+            class="game-form__tag-remove"
+            type="button"
+            (click)="removeTag(tag)"
+            [attr.aria-label]="'Remove tag ' + tag"
+          >
+            &times;
+          </button>
+        </span>
+      }
+      <input
+        id="tagInput"
+        class="game-form__tag-input"
+        type="text"
+        placeholder="Add tag and press Enter"
+        [value]="tagInput()"
+        (input)="onTagInputChange($any($event.target).value)"
+        (keydown.enter)="addTag($event)"
+      />
+    </div>
+  </div>
+
+  <div class="game-form__actions">
+    <button class="game-form__cancel-btn" type="button" (click)="onCancel()">Cancel</button>
+    <button class="game-form__submit-btn" type="submit" [disabled]="submitting">
+      {{ submitting ? 'Saving...' : submitLabel }}
+    </button>
+  </div>
+</form>

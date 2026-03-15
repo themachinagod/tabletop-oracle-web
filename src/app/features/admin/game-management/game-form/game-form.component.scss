@@ -1,0 +1,198 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.game-form {
+  max-width: 600px;
+}
+
+.game-form__field {
+  margin-bottom: $spacing-lg;
+}
+
+.game-form__label {
+  @include body-sm;
+  display: block;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+  font-weight: $font-weight-medium;
+}
+
+.game-form__required {
+  color: $color-error;
+}
+
+.game-form__input,
+.game-form__select,
+.game-form__textarea {
+  @include body-base;
+  width: 100%;
+  background: $color-bg-surface;
+  color: $color-text-primary;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-md;
+  min-height: $touch-target-min;
+  transition: border-color $transition-fast;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: $color-text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-accent-primary;
+  }
+
+  &--error {
+    border-color: $color-error;
+  }
+}
+
+.game-form__textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.game-form__error {
+  @include body-xs;
+  display: block;
+  color: $color-error;
+  margin-top: $spacing-xs;
+}
+
+.game-form__row {
+  display: flex;
+  gap: $spacing-md;
+
+  .game-form__field {
+    flex: 1;
+  }
+}
+
+.game-form__tags-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  align-items: center;
+  background: $color-bg-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-sm;
+  min-height: $touch-target-min;
+
+  &:focus-within {
+    border-color: $color-accent-primary;
+  }
+}
+
+.game-form__tag {
+  @include body-sm;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  background: $color-accent-muted;
+  color: $color-accent-primary;
+  border-radius: $radius-pill;
+  padding: $spacing-xs $spacing-sm;
+  font-weight: $font-weight-medium;
+}
+
+.game-form__tag-remove {
+  @include body-xs;
+  background: transparent;
+  color: $color-accent-primary;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+
+  &:hover {
+    color: $color-error;
+  }
+}
+
+.game-form__tag-input {
+  @include body-base;
+  flex: 1;
+  min-width: 120px;
+  background: transparent;
+  color: $color-text-primary;
+  border: none;
+  padding: $spacing-xs;
+
+  &::placeholder {
+    color: $color-text-muted;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.game-form__actions {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: flex-end;
+  margin-top: $spacing-xl;
+}
+
+.game-form__cancel-btn {
+  @include body-base;
+  background: transparent;
+  color: $color-text-secondary;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  min-height: $touch-target-min;
+  font-weight: $font-weight-medium;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $color-bg-surface;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.game-form__submit-btn {
+  @include body-base;
+  background: $color-accent-primary;
+  color: $color-text-primary;
+  border: none;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  min-height: $touch-target-min;
+  font-weight: $font-weight-medium;
+  transition: background $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $color-accent-hover;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .game-form__row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .game-form__actions {
+    flex-direction: column-reverse;
+  }
+}

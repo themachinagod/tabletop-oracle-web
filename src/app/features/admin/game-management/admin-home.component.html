@@ -1,0 +1,114 @@
+<section class="admin-home">
+  <header class="admin-home__header">
+    <h1 class="admin-home__title">Game Library</h1>
+    <button class="admin-home__create-btn" (click)="createGame()" type="button">Create Game</button>
+  </header>
+
+  @if (error()) {
+    <app-error-banner [message]="error()!" (dismissed)="dismissError()" />
+  }
+
+  <div class="admin-home__filters">
+    <input
+      class="admin-home__search"
+      type="search"
+      placeholder="Search games..."
+      [value]="searchText()"
+      (input)="onSearchInput($any($event.target).value)"
+      aria-label="Search games"
+    />
+
+    <select
+      class="admin-home__status-filter"
+      [value]="statusFilter()"
+      (change)="onStatusChange($any($event.target).value)"
+      aria-label="Filter by status"
+    >
+      @for (option of statusOptions; track option.value) {
+        <option [value]="option.value">{{ option.label }}</option>
+      }
+    </select>
+  </div>
+
+  @if (loading() && games().length === 0) {
+    <app-loading-spinner message="Loading games..." />
+  } @else if (games().length === 0) {
+    @if (hasActiveFilters()) {
+      <app-empty-state message="No games match your search." />
+    } @else {
+      <app-empty-state
+        message="No games in the library. Create your first game to get started."
+        actionLabel="Create Game"
+        (actionClicked)="createGame()"
+      />
+    }
+  } @else {
+    @if (loading()) {
+      <app-loading-spinner message="Loading games..." />
+    } @else {
+      <div class="admin-home__table-wrapper">
+        <table class="admin-home__table" role="grid">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Documents</th>
+              <th scope="col">Expansions</th>
+              <th scope="col">Last Updated</th>
+              <th scope="col">Status</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (game of games(); track game.id) {
+              <tr
+                class="admin-home__row"
+                (click)="viewGame(game)"
+                (keydown.enter)="viewGame(game)"
+                tabindex="0"
+                role="link"
+                [attr.aria-label]="'View details for ' + game.name"
+              >
+                <td class="admin-home__cell-name">{{ game.name }}</td>
+                <td>{{ game.document_count }}</td>
+                <td>{{ game.expansion_count }}</td>
+                <td>{{ game.updated_at | relativeTime }}</td>
+                <td>
+                  <span
+                    class="admin-home__status-badge"
+                    [class.admin-home__status-badge--archived]="!game.is_active"
+                  >
+                    {{ game.is_active ? 'Active' : 'Archived' }}
+                  </span>
+                </td>
+                <td class="admin-home__actions">
+                  <button
+                    class="admin-home__action-btn"
+                    (click)="viewGame(game); $event.stopPropagation()"
+                    type="button"
+                    aria-label="View {{ game.name }}"
+                  >
+                    View
+                  </button>
+                  <button
+                    class="admin-home__action-btn"
+                    (click)="editGame(game, $event)"
+                    type="button"
+                    aria-label="Edit {{ game.name }}"
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      @if (pagination(); as pag) {
+        @if (pag.total_pages > 1) {
+          <app-pagination [pagination]="pag" (pageChange)="onPageChange($event)" />
+        }
+      }
+    }
+  }
+</section>

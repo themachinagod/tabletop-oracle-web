@@ -62,3 +62,31 @@ export interface TagCount {
   tag: string;
   count: number;
 }
+
+/** Payload for creating a new game (POST /games). */
+export interface GameCreate {
+  name: string;
+  publisher?: string;
+  year_published?: number;
+  edition?: string;
+  min_players?: number;
+  max_players?: number;
+  description?: string;
+  complexity?: ComplexityLevel;
+  tags?: string[];
+}
+
+/** Payload for updating game metadata (PATCH /games/:id). */
+export type GameUpdate = Partial<GameCreate>;
+
+/** Status filter options for admin game listing. */
+export type AdminGameStatus = 'active' | 'archived' | 'all';
+
+/** Filter parameters for admin game list endpoint. */
+export interface AdminGameFilters {
+  search?: string;
+  status?: AdminGameStatus;
+  sort?: string;
+  page?: number;
+  page_size?: number;
+}
