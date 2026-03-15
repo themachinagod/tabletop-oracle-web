@@ -347,7 +347,11 @@ describe('SseService', () => {
     });
 
     it('should apply exponential backoff: 1s, 2s, 4s, 8s, 16s', () => {
-      const sub = service.connect('/stream').subscribe({ error: () => { /* expected */ } });
+      const sub = service.connect('/stream').subscribe({
+        error: () => {
+          /* expected */
+        },
+      });
 
       // Trigger consecutive retries without calling simulateOpen (which
       // would reset the retry counter). Each retry fires immediately
@@ -375,7 +379,11 @@ describe('SseService', () => {
     });
 
     it('should reset retry count on successful connection', () => {
-      const sub = service.connect('/stream').subscribe({ error: () => { /* expected */ } });
+      const sub = service.connect('/stream').subscribe({
+        error: () => {
+          /* expected */
+        },
+      });
 
       // First error + reconnect
       latestMock().simulateOpen();
@@ -430,7 +438,11 @@ describe('SseService', () => {
       // We test indirectly by verifying the backoff formula caps correctly.
       // The 5-retry limit prevents us from reaching 32s, so this tests
       // the implementation uses Math.min correctly.
-      const sub = service.connect('/stream').subscribe({ error: () => { /* expected */ } });
+      const sub = service.connect('/stream').subscribe({
+        error: () => {
+          /* expected */
+        },
+      });
 
       // Burn through retries quickly
       for (let i = 0; i < 5; i++) {
@@ -446,7 +458,11 @@ describe('SseService', () => {
     });
 
     it('should clear pending retry timeout on unsubscribe', () => {
-      const sub = service.connect('/stream').subscribe({ error: () => { /* expected */ } });
+      const sub = service.connect('/stream').subscribe({
+        error: () => {
+          /* expected */
+        },
+      });
 
       latestMock().simulateOpen();
       latestMock().simulateRetryableError();
@@ -461,7 +477,11 @@ describe('SseService', () => {
     });
 
     it('should close existing EventSource before retrying', () => {
-      const sub = service.connect('/stream').subscribe({ error: () => { /* expected */ } });
+      const sub = service.connect('/stream').subscribe({
+        error: () => {
+          /* expected */
+        },
+      });
 
       const firstMock = latestMock();
       firstMock.simulateOpen();

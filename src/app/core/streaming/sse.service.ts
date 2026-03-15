@@ -68,7 +68,10 @@ export class SseService {
               );
               return;
             }
-            const delay = Math.min(INITIAL_RETRY_MS * BACKOFF_FACTOR ** (retryCount - 1), MAX_RETRY_MS);
+            const delay = Math.min(
+              INITIAL_RETRY_MS * BACKOFF_FACTOR ** (retryCount - 1),
+              MAX_RETRY_MS,
+            );
             retryTimeout = setTimeout(() => {
               retryTimeout = null;
               open();
