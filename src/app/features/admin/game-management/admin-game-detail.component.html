@@ -156,9 +156,7 @@
         }
 
         @case ('expansions') {
-          <div class="game-detail__placeholder">
-            <p>Expansion management will be available in a future update.</p>
-          </div>
+          <app-expansion-list [gameId]="currentGameId" />
         }
       }
     </div>

@@ -1,0 +1,115 @@
+@if (error()) {
+  <app-error-banner [message]="error()!" (dismissed)="dismissError()" />
+}
+
+@if (loading()) {
+  <app-loading-spinner message="Loading expansions..." />
+} @else if (expansions().length === 0) {
+  <app-empty-state
+    message="No expansions for this game."
+    actionLabel="Add Expansion"
+    (actionClicked)="openCreateForm()"
+  />
+} @else {
+  <div class="expansion-list">
+    <div class="expansion-list__header">
+      <button class="expansion-list__add-btn" type="button" (click)="openCreateForm()">
+        Add Expansion
+      </button>
+    </div>
+
+    <div class="expansion-list__items">
+      @for (expansion of expansions(); track expansion.id) {
+        <div
+          class="expansion-list__card"
+          [class.expansion-list__card--archived]="!expansion.is_active"
+        >
+          <div class="expansion-list__card-info">
+            <div class="expansion-list__card-header">
+              <span class="expansion-list__card-name">{{ expansion.name }}</span>
+              <span
+                class="expansion-list__card-status"
+                [class.expansion-list__card-status--archived]="!expansion.is_active"
+              >
+                {{ expansion.is_active ? 'Active' : 'Archived' }}
+              </span>
+            </div>
+
+            @if (expansion.description) {
+              <p class="expansion-list__card-description">{{ expansion.description }}</p>
+            }
+
+            @if (expansion.year_published) {
+              <span class="expansion-list__card-year">
+                Published {{ expansion.year_published }}
+              </span>
+            }
+          </div>
+
+          <div class="expansion-list__card-actions">
+            <button
+              class="expansion-list__edit-btn"
+              type="button"
+              (click)="openEditForm(expansion)"
+              [attr.aria-label]="'Edit ' + expansion.name"
+            >
+              Edit
+            </button>
+            @if (expansion.is_active) {
+              <button
+                class="expansion-list__archive-btn"
+                type="button"
+                (click)="confirmArchive(expansion)"
+                [disabled]="actionInProgress()"
+                [attr.aria-label]="'Archive ' + expansion.name"
+              >
+                Archive
+              </button>
+            } @else {
+              <button
+                class="expansion-list__restore-btn"
+                type="button"
+                (click)="confirmRestore(expansion)"
+                [disabled]="actionInProgress()"
+                [attr.aria-label]="'Restore ' + expansion.name"
+              >
+                Restore
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<app-expansion-form
+  [open]="showForm()"
+  [expansion]="editingExpansion()"
+  [submitting]="formSubmitting()"
+  (saved)="onFormSaved($event)"
+  (cancelled)="onFormCancelled()"
+/>
+
+@if (archiveTarget(); as target) {
+  <app-confirm-dialog
+    [open]="true"
+    title="Archive Expansion"
+    [message]="'Are you sure you want to archive \'' + target.name + '\'?'"
+    confirmLabel="Archive"
+    [destructive]="true"
+    (confirmed)="onArchiveConfirmed()"
+    (cancelled)="onArchiveCancelled()"
+  />
+}
+
+@if (restoreTarget(); as target) {
+  <app-confirm-dialog
+    [open]="true"
+    title="Restore Expansion"
+    [message]="'Restore \'' + target.name + '\' and make it active again?'"
+    confirmLabel="Restore"
+    (confirmed)="onRestoreConfirmed()"
+    (cancelled)="onRestoreCancelled()"
+  />
+}

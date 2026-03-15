@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { GameDetail } from '../../../models/game.model';
 import { AdminGameService } from '../../../core/services/admin-game.service';
+import { AdminExpansionService } from '../../../core/services/admin-expansion.service';
 import { AdminGameDetailComponent } from './admin-game-detail.component';
 
 describe('AdminGameDetailComponent', () => {
@@ -55,6 +56,16 @@ describe('AdminGameDetailComponent', () => {
       imports: [AdminGameDetailComponent],
       providers: [
         { provide: AdminGameService, useValue: mockAdminGameService },
+        {
+          provide: AdminExpansionService,
+          useValue: {
+            listExpansions: vi.fn().mockReturnValue(of([])),
+            createExpansion: vi.fn(),
+            updateExpansion: vi.fn(),
+            archiveExpansion: vi.fn(),
+            restoreExpansion: vi.fn(),
+          },
+        },
         { provide: Router, useValue: mockRouter },
         {
           provide: ActivatedRoute,

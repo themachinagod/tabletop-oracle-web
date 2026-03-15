@@ -63,6 +63,16 @@ export interface TagCount {
   count: number;
 }
 
+/** Payload for creating an expansion (POST /games/:id/expansions). */
+export interface ExpansionCreate {
+  name: string;
+  description?: string;
+  year_published?: number;
+}
+
+/** Payload for updating expansion metadata (PATCH /games/:id/expansions/:eid). */
+export type ExpansionUpdate = Partial<ExpansionCreate>;
+
 /** Payload for creating a new game (POST /games). */
 export interface GameCreate {
   name: string;
