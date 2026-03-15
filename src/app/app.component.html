@@ -1,1 +1,6 @@
-<router-outlet />
+@if (isAuthenticated$ | async) {
+  <app-navigation />
+}
+<main class="app-content" [class.app-content--authenticated]="isAuthenticated$ | async">
+  <router-outlet />
+</main>

@@ -1,0 +1,164 @@
+$breakpoint-md: 768px;
+
+// ── Desktop top navigation ──────────────────────────────────────────
+
+.top-nav {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  padding: 0 1.5rem;
+  background-color: #1a1a2e;
+  color: #e0e0e0;
+  z-index: 100;
+
+  @media (min-width: $breakpoint-md) {
+    display: flex;
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+  }
+
+  &__title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+
+    &:hover {
+      color: #b8c4ff;
+    }
+  }
+
+  &__links {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  &__link {
+    padding: 0.5rem 1rem;
+    color: #c0c0c0;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+    }
+
+    &--active {
+      background-color: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      font-weight: 500;
+    }
+  }
+
+  &__user {
+    position: relative;
+  }
+
+  &__user-button {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: #e0e0e0;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.25rem;
+    background-color: #1a1a2e;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    min-width: 140px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+  }
+
+  &__dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.6rem 1rem;
+    background: none;
+    border: none;
+    color: #e0e0e0;
+    font-size: 0.85rem;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+  }
+}
+
+// ── Mobile bottom navigation ────────────────────────────────────────
+
+.bottom-nav {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background-color: #1a1a2e;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 100;
+
+  @media (min-width: $breakpoint-md) {
+    display: none;
+  }
+
+  &__link {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    color: #a0a0a0;
+    text-decoration: none;
+    min-height: 44px;
+    min-width: 44px;
+    transition: color 0.15s;
+
+    &:hover {
+      color: #e0e0e0;
+    }
+
+    &--active {
+      color: #ffffff;
+    }
+  }
+
+  &__icon {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  &__label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
