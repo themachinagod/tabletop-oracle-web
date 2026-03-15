@@ -2,9 +2,11 @@ import { UpperCasePipe } from '@angular/common';
 import { Component, DestroyRef, inject, Input, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { DocumentSummary } from '../../../models/document.model';
+import { Subscription } from 'rxjs';
+import { DocumentSummary, DocumentStatus } from '../../../models/document.model';
 import { ExpansionDetail } from '../../../models/game.model';
 import { AdminDocumentService } from '../../../core/services/admin-document.service';
+import { DocumentProcessingService } from '../../../core/services/document-processing.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ErrorBannerComponent } from '../../../shared/components/error-banner/error-banner.component';
@@ -40,6 +42,7 @@ import { DocumentUploadComponent } from './document-upload.component';
 })
 export class DocumentListComponent implements OnInit {
   private readonly documentService = inject(AdminDocumentService);
+  private readonly processingService = inject(DocumentProcessingService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -63,6 +66,12 @@ export class DocumentListComponent implements OnInit {
 
   /** Whether a delete operation is in progress. */
   readonly deleteInProgress = signal(false);
+
+  /** Live status overrides from SSE streams, keyed by document ID. */
+  readonly liveStatuses = signal<Map<string, DocumentStatus>>(new Map());
+
+  /** Active SSE subscriptions for processing documents. */
+  private readonly processingSubscriptions = new Map<string, Subscription>();
 
   ngOnInit(): void {
     this.loadDocuments();
@@ -117,6 +126,16 @@ export class DocumentListComponent implements OnInit {
     this.error.set(null);
   }
 
+  /**
+   * Get the effective status for a document, considering live SSE updates.
+   *
+   * @param doc - The document summary from the API.
+   * @returns The live status if available, otherwise the API status.
+   */
+  getEffectiveStatus(doc: DocumentSummary): DocumentStatus {
+    return this.liveStatuses().get(doc.id) ?? doc.status;
+  }
+
   /** Format file size for display. */
   formatFileSize(bytes: number): string {
     if (bytes < 1024) return `${bytes} B`;
@@ -136,11 +155,72 @@ export class DocumentListComponent implements OnInit {
         next: (result) => {
           this.documents.set(result.data);
           this.loading.set(false);
+          this.watchProcessingDocuments(result.data);
         },
         error: () => {
           this.error.set('Failed to load documents. Please try again.');
           this.loading.set(false);
         },
       });
+  }
+
+  /**
+   * Subscribe to SSE streams for all documents currently in a processing state.
+   *
+   * Only subscribes if not already watching that document. On terminal events
+   * (completed or error), the list is refreshed to pick up the final state
+   * from the API.
+   */
+  private watchProcessingDocuments(docs: DocumentSummary[]): void {
+    const processingDocs = docs.filter(
+      (d) => d.status === 'uploaded' || d.status === 'parsing',
+    );
+
+    for (const doc of processingDocs) {
+      if (this.processingSubscriptions.has(doc.id)) continue;
+
+      const sub = this.processingService
+        .watchProcessing(doc.id)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (event) => {
+            if (event.type === 'started' || event.type === 'stage') {
+              this.updateLiveStatus(doc.id, 'parsing');
+            } else if (event.type === 'completed') {
+              this.updateLiveStatus(doc.id, 'processed');
+              this.cleanupSubscription(doc.id);
+              this.loadDocuments();
+            } else if (event.type === 'error') {
+              this.updateLiveStatus(doc.id, 'error');
+              this.cleanupSubscription(doc.id);
+              this.loadDocuments();
+            }
+          },
+          error: () => {
+            this.cleanupSubscription(doc.id);
+          },
+          complete: () => {
+            this.cleanupSubscription(doc.id);
+          },
+        });
+
+      this.processingSubscriptions.set(doc.id, sub);
+    }
+  }
+
+  /** Update the live status map for a document. */
+  private updateLiveStatus(documentId: string, status: DocumentStatus): void {
+    const current = new Map(this.liveStatuses());
+    current.set(documentId, status);
+    this.liveStatuses.set(current);
+  }
+
+  /** Clean up an SSE subscription for a document. */
+  private cleanupSubscription(documentId: string): void {
+    const sub = this.processingSubscriptions.get(documentId);
+    if (sub) {
+      sub.unsubscribe();
+      this.processingSubscriptions.delete(documentId);
+    }
   }
 }

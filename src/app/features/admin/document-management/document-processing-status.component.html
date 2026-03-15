@@ -1,0 +1,59 @@
+<div class="processing-status" role="status" aria-live="polite">
+  @if (connectionError()) {
+    <div class="processing-status__connection-error">
+      <span class="processing-status__error-icon" aria-hidden="true">!</span>
+      {{ connectionError() }}
+    </div>
+  } @else if (isStreaming()) {
+    <div class="processing-status__live">
+      <div class="processing-status__header">
+        <span class="processing-status__indicator" aria-hidden="true"></span>
+        <span class="processing-status__label">Processing</span>
+        @if (currentStage()) {
+          <span class="processing-status__stage">{{ currentStage() }}</span>
+        }
+      </div>
+      @if (progress() > 0 && progress() < 1) {
+        <div
+          class="processing-status__progress-bar"
+          role="progressbar"
+          [attr.aria-valuenow]="(progress() * 100).toFixed(0)"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          <div
+            class="processing-status__progress-fill"
+            [style.width.%]="progress() * 100"
+          ></div>
+        </div>
+      }
+    </div>
+  } @else if (streamErrorMessage()) {
+    <div class="processing-status__error">
+      <span class="processing-status__error-icon" aria-hidden="true">!</span>
+      <span class="processing-status__error-text">{{ streamErrorMessage() }}</span>
+    </div>
+  } @else if (status === 'error' && errorMessage) {
+    <div class="processing-status__error">
+      <span class="processing-status__error-icon" aria-hidden="true">!</span>
+      <span class="processing-status__error-text">{{ errorMessage }}</span>
+    </div>
+  } @else if (status === 'processed') {
+    <div class="processing-status__completed">
+      <span class="processing-status__success-icon" aria-hidden="true">&#10003;</span>
+      <span class="processing-status__completed-text">
+        Processed
+        @if (processedAt) {
+          at {{ processedAt }}
+        }
+        @if (chunkCount !== null) {
+          &mdash; {{ chunkCount }} chunks
+        }
+      </span>
+    </div>
+  } @else if (status === 'uploaded') {
+    <div class="processing-status__pending">
+      <span class="processing-status__pending-text">Waiting for processing to begin...</span>
+    </div>
+  }
+</div>

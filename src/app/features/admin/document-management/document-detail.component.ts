@@ -10,6 +10,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
 import { ErrorBannerComponent } from '../../../shared/components/error-banner/error-banner.component';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { DocumentMetadataComponent } from './document-metadata.component';
+import { DocumentProcessingStatusComponent } from './document-processing-status.component';
 import { DocumentStatusBadgeComponent } from './document-status-badge.component';
 import { DocumentTypeBadgeComponent } from './document-type-badge.component';
 import { DocumentVersionHistoryComponent } from './document-version-history.component';
@@ -29,6 +30,7 @@ import { DocumentVersionHistoryComponent } from './document-version-history.comp
   imports: [
     ConfirmDialogComponent,
     DocumentMetadataComponent,
+    DocumentProcessingStatusComponent,
     DocumentStatusBadgeComponent,
     DocumentTypeBadgeComponent,
     DocumentVersionHistoryComponent,
@@ -138,6 +140,11 @@ export class DocumentDetailComponent implements OnInit {
 
   /** Refresh document data after version upload. */
   onVersionUploaded(): void {
+    this.loadDocument();
+  }
+
+  /** Refresh document data when processing status changes via SSE. */
+  onProcessingChanged(): void {
     this.loadDocument();
   }
 

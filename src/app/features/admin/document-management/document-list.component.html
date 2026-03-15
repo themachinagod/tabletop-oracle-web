@@ -41,7 +41,7 @@
               {{ doc.expansion_name ?? 'Base Game' }}
             </td>
             <td class="document-list__td">
-              <app-document-status-badge [status]="doc.status" />
+              <app-document-status-badge [status]="getEffectiveStatus(doc)" />
             </td>
             <td class="document-list__td document-list__td--right">v{{ doc.current_version }}</td>
             <td class="document-list__td document-list__td--right">

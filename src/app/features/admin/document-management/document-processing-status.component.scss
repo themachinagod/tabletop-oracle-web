@@ -1,0 +1,129 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.processing-status {
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  background: rgba($color-text-muted, 0.05);
+
+  &__live {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: $color-info;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  &__label {
+    @include body-sm;
+    font-weight: $font-weight-medium;
+    color: $color-info;
+  }
+
+  &__stage {
+    @include body-sm;
+    color: $color-text-muted;
+
+    &::before {
+      content: '\2014\00a0'; // em dash + space
+    }
+  }
+
+  &__progress-bar {
+    width: 100%;
+    height: 4px;
+    border-radius: $radius-pill;
+    background: rgba($color-info, 0.15);
+    overflow: hidden;
+  }
+
+  &__progress-fill {
+    height: 100%;
+    border-radius: $radius-pill;
+    background: $color-info;
+    transition: width 0.3s ease;
+  }
+
+  &__completed {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__success-icon {
+    color: $color-success;
+    font-weight: $font-weight-bold;
+  }
+
+  &__completed-text {
+    @include body-sm;
+    color: $color-success;
+  }
+
+  &__error {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-sm;
+  }
+
+  &__error-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba($color-error, 0.15);
+    color: $color-error;
+    font-weight: $font-weight-bold;
+    @include body-xs;
+    flex-shrink: 0;
+  }
+
+  &__error-text {
+    @include body-sm;
+    color: $color-error;
+  }
+
+  &__connection-error {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-sm;
+    @include body-sm;
+    color: $color-text-muted;
+  }
+
+  &__pending {
+    display: flex;
+    align-items: center;
+  }
+
+  &__pending-text {
+    @include body-sm;
+    color: $color-text-muted;
+    font-style: italic;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
