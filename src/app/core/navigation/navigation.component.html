@@ -1,0 +1,58 @@
+<!-- Desktop top navigation bar (visible >= 768px) -->
+<nav class="top-nav" aria-label="Main navigation">
+  <div class="top-nav__brand">
+    <a routerLink="/" class="top-nav__title">Tabletop Oracle</a>
+  </div>
+
+  <div class="top-nav__links">
+    <a
+      routerLink="/"
+      routerLinkActive="top-nav__link--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="top-nav__link"
+    >
+      Home
+    </a>
+    <a routerLink="/games" routerLinkActive="top-nav__link--active" class="top-nav__link">
+      Games
+    </a>
+  </div>
+
+  @if (user$ | async; as user) {
+    <div class="top-nav__user">
+      <button
+        class="top-nav__user-button"
+        (click)="toggleUserMenu()"
+        [attr.aria-expanded]="userMenuOpen"
+        aria-haspopup="true"
+        type="button"
+      >
+        {{ user.display_name }}
+      </button>
+      @if (userMenuOpen) {
+        <div class="top-nav__dropdown" role="menu">
+          <button class="top-nav__dropdown-item" (click)="logout()" role="menuitem" type="button">
+            Sign out
+          </button>
+        </div>
+      }
+    </div>
+  }
+</nav>
+
+<!-- Mobile bottom navigation bar (visible < 768px) -->
+<nav class="bottom-nav" aria-label="Mobile navigation">
+  <a
+    routerLink="/"
+    routerLinkActive="bottom-nav__link--active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="bottom-nav__link"
+  >
+    <span class="bottom-nav__icon" aria-hidden="true">&#8962;</span>
+    <span class="bottom-nav__label">Home</span>
+  </a>
+  <a routerLink="/games" routerLinkActive="bottom-nav__link--active" class="bottom-nav__link">
+    <span class="bottom-nav__icon" aria-hidden="true">&#9638;</span>
+    <span class="bottom-nav__label">Games</span>
+  </a>
+</nav>

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
 import { environment } from '../config/environment';
 import { User } from './user.model';
-import { DataEnvelope } from '../../models/api.model';
+import { ApiResponse } from '../../models/api.model';
 
 /**
  * Authentication service using BFF (Backend-For-Frontend) pattern.
@@ -60,7 +60,7 @@ export class AuthService {
    */
   loadUser(): Observable<User | null> {
     return this.http
-      .get<DataEnvelope<User>>(`${environment.apiUrl}/auth/me`, {
+      .get<ApiResponse<User>>(`${environment.apiUrl}/auth/me`, {
         withCredentials: true,
       })
       .pipe(

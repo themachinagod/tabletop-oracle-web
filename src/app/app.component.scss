@@ -1,0 +1,17 @@
+@use 'variables' as *;
+
+.app-content {
+  min-height: 100vh;
+
+  // When authenticated, account for navigation bars
+  &--authenticated {
+    // Bottom nav height on mobile
+    padding-bottom: 56px;
+
+    @media (min-width: $breakpoint-md) {
+      // Top nav height on desktop, no bottom padding
+      padding-top: 56px;
+      padding-bottom: 0;
+    }
+  }
+}

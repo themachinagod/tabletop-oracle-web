@@ -1,15 +1,27 @@
-/** Standard API response envelope. */
-export interface DataEnvelope<T> {
+/**
+ * F001 API envelope types.
+ *
+ * All API responses follow the F001 envelope format. These interfaces
+ * are used by ApiService for automatic unwrapping so feature services
+ * receive typed domain objects directly.
+ */
+
+/** Standard API response envelope wrapping a single resource. */
+export interface ApiResponse<T> {
   data: T;
+  meta: { request_id: string };
 }
 
-/** Paginated list response envelope. */
-export interface ListEnvelope<T> {
+/** Paginated API response envelope wrapping a collection. */
+export interface PaginatedResponse<T> {
   data: T[];
-  meta: PaginationMeta;
+  meta: {
+    request_id: string;
+    pagination: PaginationMeta;
+  };
 }
 
-/** Pagination metadata. */
+/** Pagination metadata returned in paginated responses. */
 export interface PaginationMeta {
   page: number;
   page_size: number;
@@ -17,7 +29,13 @@ export interface PaginationMeta {
   total_pages: number;
 }
 
-/** Standard API error response. */
+/** Unwrapped paginated result returned by ApiService.getPaginated(). */
+export interface PaginatedResult<T> {
+  data: T[];
+  pagination: PaginationMeta;
+}
+
+/** Standard API error response envelope. */
 export interface ErrorEnvelope {
   error: {
     code: string;
