@@ -33,6 +33,18 @@ export interface SessionFilters {
   page_size?: number;
 }
 
+/** Payload for creating a new session. */
+export interface SessionCreate {
+  /** Game ID to create the session for. */
+  game_id: string;
+  /** IDs of selected expansions to include in the session. */
+  expansion_ids: string[];
+  /** Optional player count for the session. */
+  player_count?: number;
+  /** Session display name. */
+  name: string;
+}
+
 /** Payload for updating a session's status. */
 export interface SessionStatusUpdate {
   status: SessionStatus;

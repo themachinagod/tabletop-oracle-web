@@ -39,6 +39,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'games/:gameId/new-session',
+        loadComponent: () =>
+          import('./features/player/session-setup/session-setup.component').then(
+            (m) => m.SessionSetupComponent,
+          ),
+      },
+      {
         path: 'admin',
         canActivate: [authGuard],
         data: { role: 'curator' },

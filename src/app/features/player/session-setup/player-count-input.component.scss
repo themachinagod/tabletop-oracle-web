@@ -1,0 +1,78 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.player-count {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.player-count__label {
+  @include body-sm;
+  color: $color-text-secondary;
+}
+
+.player-count__controls {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.player-count__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: $touch-target-min;
+  height: $touch-target-min;
+  background: $color-bg-tertiary;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  color: $color-text-primary;
+  font-size: $font-size-lg;
+  cursor: pointer;
+  transition: background-color $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $color-bg-surface;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.player-count__input {
+  @include body-base;
+  width: 4rem;
+  height: $touch-target-min;
+  text-align: center;
+  background: $color-bg-secondary;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  color: $color-text-primary;
+
+  // Remove number spinners
+  -moz-appearance: textfield;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &::placeholder {
+    color: $color-text-muted;
+  }
+
+  &:focus {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: -2px;
+    border-color: $color-accent-primary;
+  }
+}
