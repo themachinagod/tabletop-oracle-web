@@ -1,0 +1,139 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.expansion-form__overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $color-overlay;
+  z-index: 1000;
+}
+
+.expansion-form__dialog {
+  background-color: $color-bg-secondary;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  max-width: 500px;
+  width: calc(100% - 2 * $spacing-lg);
+  box-shadow: $shadow-lg;
+}
+
+.expansion-form__title {
+  @include heading-md;
+  color: $color-text-primary;
+  margin: 0 0 $spacing-lg;
+}
+
+.expansion-form__field {
+  margin-bottom: $spacing-lg;
+}
+
+.expansion-form__label {
+  @include body-sm;
+  display: block;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+  font-weight: $font-weight-medium;
+}
+
+.expansion-form__required {
+  color: $color-error;
+}
+
+.expansion-form__input,
+.expansion-form__textarea {
+  @include body-base;
+  width: 100%;
+  background: $color-bg-surface;
+  color: $color-text-primary;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-md;
+  min-height: $touch-target-min;
+  transition: border-color $transition-fast;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: $color-text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-accent-primary;
+  }
+
+  &--error {
+    border-color: $color-error;
+  }
+}
+
+.expansion-form__textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.expansion-form__error {
+  @include body-xs;
+  display: block;
+  color: $color-error;
+  margin-top: $spacing-xs;
+}
+
+.expansion-form__actions {
+  display: flex;
+  gap: $spacing-sm;
+  justify-content: flex-end;
+  margin-top: $spacing-lg;
+}
+
+.expansion-form__cancel-btn {
+  @include body-base;
+  background: none;
+  border: 1px solid $color-border-strong;
+  color: $color-text-secondary;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  min-height: $touch-target-min;
+  font-weight: $font-weight-medium;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.expansion-form__submit-btn {
+  @include body-base;
+  background: $color-accent-primary;
+  color: $color-text-primary;
+  border: none;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  min-height: $touch-target-min;
+  font-weight: $font-weight-medium;
+  transition: background $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $color-accent-hover;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}

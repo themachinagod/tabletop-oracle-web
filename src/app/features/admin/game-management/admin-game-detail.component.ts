@@ -9,6 +9,7 @@ import { ErrorBannerComponent } from '../../../shared/components/error-banner/er
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { TagChipComponent } from '../../../shared/components/tag-chip/tag-chip.component';
 import { RelativeTimePipe } from '../../../shared/pipes/relative-time.pipe';
+import { ExpansionListComponent } from '../expansion-management/expansion-list.component';
 
 /** Available tab identifiers. */
 type DetailTab = 'overview' | 'documents' | 'expansions';
@@ -17,8 +18,8 @@ type DetailTab = 'overview' | 'documents' | 'expansions';
  * Admin game detail view with tabbed layout.
  *
  * Displays game metadata, actions (edit, archive/restore), and tabs
- * for overview, documents, and expansions. Documents and expansions
- * tabs are placeholders until tasks #39 and #40 are implemented.
+ * for overview, documents, and expansions. Documents tab is a
+ * placeholder until task #40 is implemented.
  *
  * Route: /admin/games/:gameId
  */
@@ -29,6 +30,7 @@ type DetailTab = 'overview' | 'documents' | 'expansions';
     ComplexityBadgeComponent,
     ConfirmDialogComponent,
     ErrorBannerComponent,
+    ExpansionListComponent,
     LoadingSpinnerComponent,
     RelativeTimePipe,
     TagChipComponent,
@@ -63,11 +65,11 @@ export class AdminGameDetailComponent implements OnInit {
   /** Whether an archive/restore operation is in progress. */
   readonly actionInProgress = signal(false);
 
-  /** Game ID from route params. */
-  private gameId = '';
+  /** Game ID from route params, exposed for child components. */
+  currentGameId = '';
 
   ngOnInit(): void {
-    this.gameId = this.route.snapshot.paramMap.get('gameId') ?? '';
+    this.currentGameId = this.route.snapshot.paramMap.get('gameId') ?? '';
     this.loadGame();
   }
 
@@ -78,7 +80,7 @@ export class AdminGameDetailComponent implements OnInit {
 
   /** Navigate to the edit form. */
   editGame(): void {
-    this.router.navigate(['/admin/games', this.gameId, 'edit']);
+    this.router.navigate(['/admin/games', this.currentGameId, 'edit']);
   }
 
   /** Navigate back to the game list. */
@@ -103,7 +105,7 @@ export class AdminGameDetailComponent implements OnInit {
     this.error.set(null);
 
     this.adminGameService
-      .archiveGame(this.gameId)
+      .archiveGame(this.currentGameId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (game) => {
@@ -124,7 +126,7 @@ export class AdminGameDetailComponent implements OnInit {
     this.error.set(null);
 
     this.adminGameService
-      .restoreGame(this.gameId)
+      .restoreGame(this.currentGameId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (game) => {
@@ -171,7 +173,7 @@ export class AdminGameDetailComponent implements OnInit {
     this.error.set(null);
 
     this.adminGameService
-      .getGame(this.gameId)
+      .getGame(this.currentGameId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (game) => {
