@@ -1,0 +1,250 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.game-detail {
+  padding: $spacing-lg;
+}
+
+.game-detail__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-lg;
+  gap: $spacing-md;
+}
+
+.game-detail__header-left {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.game-detail__back-btn {
+  @include body-sm;
+  background: transparent;
+  color: $color-accent-primary;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  align-self: flex-start;
+
+  &:hover {
+    color: $color-accent-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.game-detail__title {
+  @include heading-xl;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+.game-detail__status {
+  @include body-xs;
+  display: inline-block;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-pill;
+  background: rgba($color-success, 0.15);
+  color: $color-success;
+  font-weight: $font-weight-medium;
+  align-self: flex-start;
+
+  &--archived {
+    background: rgba($color-text-muted, 0.15);
+    color: $color-text-muted;
+  }
+}
+
+.game-detail__header-actions {
+  display: flex;
+  gap: $spacing-sm;
+  flex-shrink: 0;
+}
+
+.game-detail__edit-btn {
+  @include body-base;
+  background: $color-accent-primary;
+  color: $color-text-primary;
+  border: none;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  min-height: $touch-target-min;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $color-accent-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.game-detail__archive-btn {
+  @include body-base;
+  background: transparent;
+  color: $color-error;
+  border: 1px solid $color-error;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  min-height: $touch-target-min;
+  transition: background $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $color-error-bg;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-error;
+    outline-offset: 2px;
+  }
+}
+
+.game-detail__restore-btn {
+  @include body-base;
+  background: transparent;
+  color: $color-success;
+  border: 1px solid $color-success;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  min-height: $touch-target-min;
+  transition: background $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: rgba($color-success, 0.12);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-success;
+    outline-offset: 2px;
+  }
+}
+
+.game-detail__tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid $color-border;
+  margin-bottom: $spacing-lg;
+}
+
+.game-detail__tab {
+  @include body-base;
+  background: transparent;
+  color: $color-text-muted;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  transition:
+    color $transition-fast,
+    border-color $transition-fast;
+
+  &:hover {
+    color: $color-text-primary;
+  }
+
+  &--active {
+    color: $color-accent-primary;
+    border-bottom-color: $color-accent-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: -2px;
+  }
+}
+
+.game-detail__content {
+  min-height: 200px;
+}
+
+.game-detail__overview {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.game-detail__section {
+  margin-bottom: $spacing-md;
+}
+
+.game-detail__section-title {
+  @include heading-sm;
+  color: $color-text-secondary;
+  margin: 0 0 $spacing-sm;
+}
+
+.game-detail__description {
+  @include body-base;
+  color: $color-text-secondary;
+  margin: 0;
+  line-height: $line-height-relaxed;
+}
+
+.game-detail__meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: $spacing-md;
+}
+
+.game-detail__meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.game-detail__meta-label {
+  @include label;
+  color: $color-text-muted;
+}
+
+.game-detail__meta-value {
+  @include body-base;
+  color: $color-text-primary;
+}
+
+.game-detail__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.game-detail__placeholder {
+  @include body-base;
+  color: $color-text-muted;
+  text-align: center;
+  padding: $spacing-xxl;
+}
+
+@media (max-width: $breakpoint-md) {
+  .game-detail__header {
+    flex-direction: column;
+  }
+
+  .game-detail__tabs {
+    overflow-x: auto;
+  }
+}

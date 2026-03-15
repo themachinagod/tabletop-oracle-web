@@ -1,0 +1,187 @@
+@if (error()) {
+  <app-error-banner [message]="error()!" (dismissed)="dismissError()" />
+}
+
+@if (loading()) {
+  <app-loading-spinner message="Loading game..." />
+} @else if (game(); as g) {
+  <section class="game-detail">
+    <header class="game-detail__header">
+      <div class="game-detail__header-left">
+        <button
+          class="game-detail__back-btn"
+          (click)="goBack()"
+          type="button"
+          aria-label="Back to game list"
+        >
+          &larr; Back
+        </button>
+        <h1 class="game-detail__title">{{ g.name }}</h1>
+        <span class="game-detail__status" [class.game-detail__status--archived]="!g.is_active">
+          {{ g.is_active ? 'Active' : 'Archived' }}
+        </span>
+      </div>
+      <div class="game-detail__header-actions">
+        <button class="game-detail__edit-btn" (click)="editGame()" type="button">Edit</button>
+        @if (g.is_active) {
+          <button
+            class="game-detail__archive-btn"
+            (click)="confirmArchive()"
+            [disabled]="actionInProgress()"
+            type="button"
+          >
+            Archive
+          </button>
+        } @else {
+          <button
+            class="game-detail__restore-btn"
+            (click)="confirmRestore()"
+            [disabled]="actionInProgress()"
+            type="button"
+          >
+            Restore
+          </button>
+        }
+      </div>
+    </header>
+
+    <nav class="game-detail__tabs" role="tablist" aria-label="Game detail tabs">
+      <button
+        class="game-detail__tab"
+        [class.game-detail__tab--active]="activeTab() === 'overview'"
+        (click)="selectTab('overview')"
+        role="tab"
+        [attr.aria-selected]="activeTab() === 'overview'"
+        type="button"
+      >
+        Overview
+      </button>
+      <button
+        class="game-detail__tab"
+        [class.game-detail__tab--active]="activeTab() === 'documents'"
+        (click)="selectTab('documents')"
+        role="tab"
+        [attr.aria-selected]="activeTab() === 'documents'"
+        type="button"
+      >
+        Documents ({{ g.document_count }})
+      </button>
+      <button
+        class="game-detail__tab"
+        [class.game-detail__tab--active]="activeTab() === 'expansions'"
+        (click)="selectTab('expansions')"
+        role="tab"
+        [attr.aria-selected]="activeTab() === 'expansions'"
+        type="button"
+      >
+        Expansions ({{ g.expansion_count }})
+      </button>
+    </nav>
+
+    <div class="game-detail__content" role="tabpanel">
+      @switch (activeTab()) {
+        @case ('overview') {
+          <div class="game-detail__overview">
+            @if (g.description) {
+              <div class="game-detail__section">
+                <h2 class="game-detail__section-title">Description</h2>
+                <p class="game-detail__description">{{ g.description }}</p>
+              </div>
+            }
+
+            <div class="game-detail__meta-grid">
+              @if (g.publisher) {
+                <div class="game-detail__meta-item">
+                  <span class="game-detail__meta-label">Publisher</span>
+                  <span class="game-detail__meta-value">{{ g.publisher }}</span>
+                </div>
+              }
+
+              @if (g.year_published) {
+                <div class="game-detail__meta-item">
+                  <span class="game-detail__meta-label">Year Published</span>
+                  <span class="game-detail__meta-value">{{ g.year_published }}</span>
+                </div>
+              }
+
+              @if (g.edition) {
+                <div class="game-detail__meta-item">
+                  <span class="game-detail__meta-label">Edition</span>
+                  <span class="game-detail__meta-value">{{ g.edition }}</span>
+                </div>
+              }
+
+              @if (playerCountDisplay) {
+                <div class="game-detail__meta-item">
+                  <span class="game-detail__meta-label">Players</span>
+                  <span class="game-detail__meta-value">{{ playerCountDisplay }}</span>
+                </div>
+              }
+
+              @if (g.complexity) {
+                <div class="game-detail__meta-item">
+                  <span class="game-detail__meta-label">Complexity</span>
+                  <app-complexity-badge [level]="g.complexity" />
+                </div>
+              }
+
+              <div class="game-detail__meta-item">
+                <span class="game-detail__meta-label">Created</span>
+                <span class="game-detail__meta-value">{{ g.created_at | relativeTime }}</span>
+              </div>
+
+              <div class="game-detail__meta-item">
+                <span class="game-detail__meta-label">Last Updated</span>
+                <span class="game-detail__meta-value">{{ g.updated_at | relativeTime }}</span>
+              </div>
+            </div>
+
+            @if (g.tags.length > 0) {
+              <div class="game-detail__section">
+                <h2 class="game-detail__section-title">Tags</h2>
+                <div class="game-detail__tags">
+                  @for (tag of g.tags; track tag) {
+                    <app-tag-chip [tag]="tag" />
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        @case ('documents') {
+          <div class="game-detail__placeholder">
+            <p>Document management will be available in a future update.</p>
+          </div>
+        }
+
+        @case ('expansions') {
+          <div class="game-detail__placeholder">
+            <p>Expansion management will be available in a future update.</p>
+          </div>
+        }
+      }
+    </div>
+  </section>
+
+  <app-confirm-dialog
+    [open]="showArchiveDialog()"
+    title="Archive Game"
+    [message]="
+      'Are you sure you want to archive \'' + g.name + '\'? Archived games are hidden from players.'
+    "
+    confirmLabel="Archive"
+    [destructive]="true"
+    (confirmed)="onArchiveConfirmed()"
+    (cancelled)="onArchiveCancelled()"
+  />
+
+  <app-confirm-dialog
+    [open]="showRestoreDialog()"
+    title="Restore Game"
+    [message]="'Restore \'' + g.name + '\' and make it visible to players again?'"
+    confirmLabel="Restore"
+    (confirmed)="onRestoreConfirmed()"
+    (cancelled)="onRestoreCancelled()"
+  />
+}
