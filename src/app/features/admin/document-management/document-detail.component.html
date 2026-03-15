@@ -61,10 +61,7 @@
       @if (doc.status === 'processed') {
         <section class="doc-detail__section">
           <h2 class="doc-detail__section-title">Content Preview</h2>
-          <app-document-content-preview
-            [gameId]="currentGameId"
-            [documentId]="currentDocumentId"
-          />
+          <app-document-content-preview [gameId]="currentGameId" [documentId]="currentDocumentId" />
         </section>
       }
 

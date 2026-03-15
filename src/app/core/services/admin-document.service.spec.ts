@@ -239,7 +239,14 @@ describe('AdminDocumentService', () => {
 
   describe('getContentPreview', () => {
     it('getContentPreview_ValidIds_CallsPreviewEndpoint', async () => {
-      const mockContent = { document_id: 'doc-1', format: 'pdf', sections: [], tables: [], image_descriptions: [], stats: {} };
+      const mockContent = {
+        document_id: 'doc-1',
+        format: 'pdf',
+        sections: [],
+        tables: [],
+        image_descriptions: [],
+        stats: {},
+      };
       mockApi.get.mockReturnValue(of(mockContent));
 
       const result = await firstValueFrom(service.getContentPreview('game-1', 'doc-1'));

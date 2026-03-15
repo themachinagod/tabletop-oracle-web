@@ -25,7 +25,9 @@
         <span class="content-preview__stat-label">Chunks</span>
       </div>
       <div class="content-preview__stat">
-        <span class="content-preview__stat-value">{{ formatNumber(c.stats.estimated_tokens) }}</span>
+        <span class="content-preview__stat-value">{{
+          formatNumber(c.stats.estimated_tokens)
+        }}</span>
         <span class="content-preview__stat-label">Tokens</span>
       </div>
     </div>
@@ -83,7 +85,11 @@
     @let collapsed = isSectionCollapsed(path);
     @let hasChildren = section.children && section.children.length > 0;
 
-    <div class="content-preview__node" role="treeitem" [attr.aria-expanded]="hasChildren ? !collapsed : null">
+    <div
+      class="content-preview__node"
+      role="treeitem"
+      [attr.aria-expanded]="hasChildren ? !collapsed : null"
+    >
       <div class="content-preview__node-header">
         @if (hasChildren) {
           <button
@@ -92,14 +98,20 @@
             (click)="toggleSection(path)"
             [attr.aria-label]="collapsed ? 'Expand ' + section.title : 'Collapse ' + section.title"
           >
-            <span class="content-preview__toggle-icon" [class.content-preview__toggle-icon--collapsed]="collapsed">
+            <span
+              class="content-preview__toggle-icon"
+              [class.content-preview__toggle-icon--collapsed]="collapsed"
+            >
               &#9662;
             </span>
           </button>
         } @else {
           <span class="content-preview__toggle-placeholder"></span>
         }
-        <span class="content-preview__node-title" [class]="'content-preview__node-title--level-' + section.level">
+        <span
+          class="content-preview__node-title"
+          [class]="'content-preview__node-title--level-' + section.level"
+        >
           {{ section.title }}
         </span>
         @if (section.page_number !== null) {
@@ -115,7 +127,10 @@
         @if (hasChildren) {
           <div class="content-preview__node-children" role="group">
             <ng-container
-              *ngTemplateOutlet="sectionList; context: { $implicit: section.children, parentPath: path }"
+              *ngTemplateOutlet="
+                sectionList;
+                context: { $implicit: section.children, parentPath: path }
+              "
             />
           </div>
         }

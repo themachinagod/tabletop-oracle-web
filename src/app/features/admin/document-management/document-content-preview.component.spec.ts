@@ -91,7 +91,11 @@ describe('DocumentContentPreviewComponent', () => {
     mockDocumentService = {
       getContentPreview: vi.fn().mockReturnValue(of(mockContent)),
       getDocument: vi.fn().mockReturnValue(of({})),
-      listDocuments: vi.fn().mockReturnValue(of({ data: [], pagination: { page: 1, page_size: 25, total_items: 0, total_pages: 0 } })),
+      listDocuments: vi
+        .fn()
+        .mockReturnValue(
+          of({ data: [], pagination: { page: 1, page_size: 25, total_items: 0, total_pages: 0 } }),
+        ),
       uploadDocument: vi.fn().mockReturnValue(of({})),
       uploadVersion: vi.fn().mockReturnValue(of({})),
       reclassifyDocument: vi.fn().mockReturnValue(of({})),
@@ -103,9 +107,7 @@ describe('DocumentContentPreviewComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [DocumentContentPreviewComponent],
-      providers: [
-        { provide: AdminDocumentService, useValue: mockDocumentService },
-      ],
+      providers: [{ provide: AdminDocumentService, useValue: mockDocumentService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DocumentContentPreviewComponent);
@@ -123,9 +125,7 @@ describe('DocumentContentPreviewComponent', () => {
   });
 
   it('ngOnInit_ApiError_SetsErrorMessage', () => {
-    mockDocumentService.getContentPreview.mockReturnValue(
-      throwError(() => new Error('fail')),
-    );
+    mockDocumentService.getContentPreview.mockReturnValue(throwError(() => new Error('fail')));
     fixture.detectChanges();
 
     expect(component.error()).toBe('Failed to load content preview.');
@@ -196,9 +196,7 @@ describe('DocumentContentPreviewComponent', () => {
   });
 
   it('dismissError_WithError_ClearsError', () => {
-    mockDocumentService.getContentPreview.mockReturnValue(
-      throwError(() => new Error('fail')),
-    );
+    mockDocumentService.getContentPreview.mockReturnValue(throwError(() => new Error('fail')));
     fixture.detectChanges();
 
     expect(component.error()).toBe('Failed to load content preview.');
