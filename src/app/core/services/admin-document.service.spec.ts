@@ -1,6 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, of, throwError } from 'rxjs';
-import { DocumentDetail, DocumentSummary, DocumentVersion, UploadClassification } from '../../models/document.model';
+import {
+  DocumentDetail,
+  DocumentSummary,
+  DocumentVersion,
+  UploadClassification,
+} from '../../models/document.model';
 import { PaginatedResult } from '../../models/api.model';
 import { ApiService } from '../api/api.service';
 import { AdminDocumentService } from './admin-document.service';
@@ -217,10 +222,7 @@ describe('AdminDocumentService', () => {
     it('retryProcessing_ValidIds_PostsToReprocessEndpoint', async () => {
       await firstValueFrom(service.retryProcessing('game-1', 'doc-1'));
 
-      expect(mockApi.post).toHaveBeenCalledWith(
-        '/games/game-1/documents/doc-1/reprocess',
-        {},
-      );
+      expect(mockApi.post).toHaveBeenCalledWith('/games/game-1/documents/doc-1/reprocess', {});
     });
   });
 

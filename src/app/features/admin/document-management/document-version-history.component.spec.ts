@@ -13,8 +13,20 @@ describe('DocumentVersionHistoryComponent', () => {
   };
 
   const mockVersions: DocumentVersion[] = [
-    { version: 2, file_size: 2048000, uploaded_at: '2026-02-01T00:00:00Z', uploaded_by_name: 'Curator', is_active: true },
-    { version: 1, file_size: 1024000, uploaded_at: '2026-01-01T00:00:00Z', uploaded_by_name: 'Curator', is_active: false },
+    {
+      version: 2,
+      file_size: 2048000,
+      uploaded_at: '2026-02-01T00:00:00Z',
+      uploaded_by_name: 'Curator',
+      is_active: true,
+    },
+    {
+      version: 1,
+      file_size: 1024000,
+      uploaded_at: '2026-01-01T00:00:00Z',
+      uploaded_by_name: 'Curator',
+      is_active: false,
+    },
   ];
 
   beforeEach(async () => {

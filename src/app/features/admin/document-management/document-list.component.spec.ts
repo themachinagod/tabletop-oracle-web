@@ -59,7 +59,9 @@ describe('DocumentListComponent', () => {
   it('ngOnInit_ValidGameId_LoadsDocuments', () => {
     fixture.detectChanges();
 
-    expect(mockDocumentService.listDocuments).toHaveBeenCalledWith('game-1', { sort: '-uploaded_at' });
+    expect(mockDocumentService.listDocuments).toHaveBeenCalledWith('game-1', {
+      sort: '-uploaded_at',
+    });
     expect(component.documents()).toEqual([mockDoc]);
     expect(component.loading()).toBe(false);
   });
@@ -76,7 +78,12 @@ describe('DocumentListComponent', () => {
     fixture.detectChanges();
     component.viewDocument(mockDoc);
 
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/admin/games', 'game-1', 'documents', 'doc-1']);
+    expect(mockRouter.navigate).toHaveBeenCalledWith([
+      '/admin/games',
+      'game-1',
+      'documents',
+      'doc-1',
+    ]);
   });
 
   it('confirmDelete_ValidDoc_SetsDeleteTarget', () => {

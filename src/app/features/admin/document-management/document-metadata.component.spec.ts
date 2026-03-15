@@ -77,7 +77,11 @@ describe('DocumentMetadataComponent', () => {
 
     component.onExpansionChange('exp-1');
 
-    expect(mockDocumentService.reassociateDocument).toHaveBeenCalledWith('game-1', 'doc-1', 'exp-1');
+    expect(mockDocumentService.reassociateDocument).toHaveBeenCalledWith(
+      'game-1',
+      'doc-1',
+      'exp-1',
+    );
     expect(updatedSpy).toHaveBeenCalled();
     expect(component.feedback()).toBe('Expansion updated.');
   });

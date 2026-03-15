@@ -43,9 +43,7 @@
             <td class="document-list__td">
               <app-document-status-badge [status]="doc.status" />
             </td>
-            <td class="document-list__td document-list__td--right">
-              v{{ doc.current_version }}
-            </td>
+            <td class="document-list__td document-list__td--right">v{{ doc.current_version }}</td>
             <td class="document-list__td document-list__td--right">
               {{ formatFileSize(doc.file_size) }}
             </td>

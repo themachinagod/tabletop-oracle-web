@@ -47,7 +47,11 @@ describe('DocumentDetailComponent', () => {
       retryProcessing: vi.fn().mockReturnValue(of(mockDoc)),
       getVersionHistory: vi.fn().mockReturnValue(of([])),
       uploadVersion: vi.fn().mockReturnValue(of({})),
-      listDocuments: vi.fn().mockReturnValue(of({ data: [], pagination: { page: 1, page_size: 25, total_items: 0, total_pages: 0 } })),
+      listDocuments: vi
+        .fn()
+        .mockReturnValue(
+          of({ data: [], pagination: { page: 1, page_size: 25, total_items: 0, total_pages: 0 } }),
+        ),
       uploadDocument: vi.fn().mockReturnValue(of({})),
       reclassifyDocument: vi.fn().mockReturnValue(of(mockDoc)),
       reassociateDocument: vi.fn().mockReturnValue(of(mockDoc)),

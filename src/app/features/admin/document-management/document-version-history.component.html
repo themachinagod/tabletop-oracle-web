@@ -6,7 +6,10 @@
   <div class="version-history__header">
     <h3 class="version-history__title">Version History</h3>
     <label class="version-history__upload-label">
-      <span class="version-history__upload-btn" [class.version-history__upload-btn--disabled]="uploading()">
+      <span
+        class="version-history__upload-btn"
+        [class.version-history__upload-btn--disabled]="uploading()"
+      >
         {{ uploading() ? 'Uploading...' : 'Upload New Version' }}
       </span>
       <input
@@ -27,10 +30,7 @@
   } @else {
     <div class="version-history__list">
       @for (v of versions(); track v.version) {
-        <div
-          class="version-history__item"
-          [class.version-history__item--active]="v.is_active"
-        >
+        <div class="version-history__item" [class.version-history__item--active]="v.is_active">
           <div class="version-history__item-info">
             <span class="version-history__version">v{{ v.version }}</span>
             @if (v.is_active) {

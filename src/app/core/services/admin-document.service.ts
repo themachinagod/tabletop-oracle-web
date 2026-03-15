@@ -86,11 +86,7 @@ export class AdminDocumentService {
    * @param file - The new version file.
    * @returns Observable of the created document version.
    */
-  uploadVersion(
-    gameId: string,
-    documentId: string,
-    file: File,
-  ): Observable<DocumentVersion> {
+  uploadVersion(gameId: string, documentId: string, file: File): Observable<DocumentVersion> {
     const formData = new FormData();
     formData.append('file', file);
     return this.api.postMultipart<DocumentVersion>(
@@ -112,10 +108,7 @@ export class AdminDocumentService {
     documentId: string,
     type: DocumentType,
   ): Observable<DocumentDetail> {
-    return this.api.put<DocumentDetail>(
-      `/games/${gameId}/documents/${documentId}/type`,
-      { type },
-    );
+    return this.api.put<DocumentDetail>(`/games/${gameId}/documents/${documentId}/type`, { type });
   }
 
   /**
@@ -131,10 +124,9 @@ export class AdminDocumentService {
     documentId: string,
     expansionId: string | null,
   ): Observable<DocumentDetail> {
-    return this.api.put<DocumentDetail>(
-      `/games/${gameId}/documents/${documentId}/expansion`,
-      { expansion_id: expansionId },
-    );
+    return this.api.put<DocumentDetail>(`/games/${gameId}/documents/${documentId}/expansion`, {
+      expansion_id: expansionId,
+    });
   }
 
   /**
@@ -156,10 +148,7 @@ export class AdminDocumentService {
    * @returns Observable of the updated document detail.
    */
   retryProcessing(gameId: string, documentId: string): Observable<DocumentDetail> {
-    return this.api.post<DocumentDetail>(
-      `/games/${gameId}/documents/${documentId}/reprocess`,
-      {},
-    );
+    return this.api.post<DocumentDetail>(`/games/${gameId}/documents/${documentId}/reprocess`, {});
   }
 
   /**
@@ -169,13 +158,8 @@ export class AdminDocumentService {
    * @param documentId - The document ID.
    * @returns Observable of version entries ordered newest first.
    */
-  getVersionHistory(
-    gameId: string,
-    documentId: string,
-  ): Observable<DocumentVersion[]> {
-    return this.api.get<DocumentVersion[]>(
-      `/games/${gameId}/documents/${documentId}/versions`,
-    );
+  getVersionHistory(gameId: string, documentId: string): Observable<DocumentVersion[]> {
+    return this.api.get<DocumentVersion[]>(`/games/${gameId}/documents/${documentId}/versions`);
   }
 
   /**
