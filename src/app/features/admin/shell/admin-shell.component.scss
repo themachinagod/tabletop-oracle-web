@@ -1,0 +1,58 @@
+@use 'variables' as *;
+
+.admin-shell {
+  display: flex;
+  min-height: calc(100vh - 56px); // subtract app header height
+  position: relative;
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 72px; // above mobile bottom nav
+    right: $spacing-md;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background-color: $color-accent-primary;
+    color: $color-text-primary;
+    font-size: $font-size-lg;
+    cursor: pointer;
+    z-index: 95;
+    box-shadow: $shadow-md;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background-color: $color-accent-hover;
+    }
+
+    // Hide on desktop — sidebar is always visible
+    @media (min-width: $breakpoint-lg) {
+      display: none;
+    }
+  }
+
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    background-color: $color-overlay;
+    z-index: 85;
+
+    @media (min-width: $breakpoint-lg) {
+      display: none;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    padding: $spacing-lg;
+    min-width: 0; // prevent flex overflow
+    overflow-y: auto;
+
+    @media (min-width: $breakpoint-lg) {
+      padding: $spacing-xl;
+    }
+  }
+}

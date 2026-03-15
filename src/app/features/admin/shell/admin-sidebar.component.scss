@@ -1,0 +1,101 @@
+@use 'variables' as *;
+
+$sidebar-width: 240px;
+
+.admin-sidebar {
+  display: none;
+  flex-direction: column;
+  width: $sidebar-width;
+  min-height: 100%;
+  background-color: $color-bg-secondary;
+  border-right: 1px solid $color-border;
+  overflow-y: auto;
+
+  &--open {
+    display: flex;
+  }
+
+  // Desktop: always visible
+  @media (min-width: $breakpoint-lg) {
+    display: flex;
+  }
+
+  // Tablet/mobile overlay when open
+  @media (max-width: $breakpoint-lg - 1) {
+    &--open {
+      position: fixed;
+      top: 56px; // below app header
+      left: 0;
+      bottom: 0;
+      z-index: 90;
+      box-shadow: $shadow-lg;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+    padding: $spacing-md $spacing-sm;
+    flex: 1;
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+    padding: $spacing-sm;
+    border-top: 1px solid $color-border;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-md;
+    color: $color-text-secondary;
+    text-decoration: none;
+    font-size: $font-size-sm;
+    min-height: $touch-target-min;
+    transition:
+      background-color $transition-fast,
+      color $transition-fast;
+    cursor: pointer;
+
+    &:hover:not(&--disabled) {
+      background-color: rgba(255, 255, 255, 0.08);
+      color: $color-text-primary;
+    }
+
+    &--active {
+      background-color: $color-accent-muted;
+      color: $color-text-primary;
+      font-weight: $font-weight-medium;
+    }
+
+    &--disabled {
+      color: $color-text-disabled;
+      cursor: default;
+    }
+  }
+
+  &__icon {
+    font-size: $font-size-md;
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  &__label {
+    flex: 1;
+  }
+
+  &__badge {
+    font-size: $font-size-xs;
+    color: $color-text-disabled;
+    background-color: $color-bg-tertiary;
+    padding: 2px 6px;
+    border-radius: $radius-sm;
+  }
+}

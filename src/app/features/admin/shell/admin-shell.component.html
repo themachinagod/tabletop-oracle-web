@@ -1,0 +1,26 @@
+<div class="admin-shell">
+  <!-- Mobile sidebar toggle -->
+  <button
+    class="admin-shell__toggle"
+    (click)="toggleSidebar()"
+    [attr.aria-expanded]="sidebarOpen()"
+    aria-controls="admin-sidebar"
+    aria-label="Toggle admin navigation"
+    type="button"
+  >
+    &#9776;
+  </button>
+
+  <!-- Sidebar overlay (mobile only, when sidebar is open) -->
+  @if (sidebarOpen()) {
+    <div class="admin-shell__overlay" (click)="closeSidebar()" role="presentation"></div>
+  }
+
+  <!-- Sidebar navigation -->
+  <app-admin-sidebar id="admin-sidebar" [open]="sidebarOpen()" (navigated)="closeSidebar()" />
+
+  <!-- Content area -->
+  <main class="admin-shell__content">
+    <router-outlet />
+  </main>
+</div>

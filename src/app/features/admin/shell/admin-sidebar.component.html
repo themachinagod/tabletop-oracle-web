@@ -1,0 +1,40 @@
+<aside
+  class="admin-sidebar"
+  [class.admin-sidebar--open]="open"
+  role="navigation"
+  aria-label="Admin navigation"
+>
+  <nav class="admin-sidebar__nav">
+    @for (item of navItems; track item.route) {
+      @if (item.disabled) {
+        <span
+          class="admin-sidebar__link admin-sidebar__link--disabled"
+          [attr.aria-disabled]="true"
+          [title]="item.label + ' (coming soon)'"
+        >
+          <span class="admin-sidebar__icon" aria-hidden="true">{{ item.icon }}</span>
+          <span class="admin-sidebar__label">{{ item.label }}</span>
+          <span class="admin-sidebar__badge">Soon</span>
+        </span>
+      } @else {
+        <a
+          class="admin-sidebar__link"
+          [routerLink]="item.route"
+          routerLinkActive="admin-sidebar__link--active"
+          [routerLinkActiveOptions]="{ exact: item.exact }"
+          (click)="onNavClick()"
+        >
+          <span class="admin-sidebar__icon" aria-hidden="true">{{ item.icon }}</span>
+          <span class="admin-sidebar__label">{{ item.label }}</span>
+        </a>
+      }
+    }
+  </nav>
+
+  <div class="admin-sidebar__footer">
+    <a class="admin-sidebar__link" routerLink="/" (click)="onNavClick()">
+      <span class="admin-sidebar__icon" aria-hidden="true">&#9654;</span>
+      <span class="admin-sidebar__label">Switch to Play</span>
+    </a>
+  </div>
+</aside>
