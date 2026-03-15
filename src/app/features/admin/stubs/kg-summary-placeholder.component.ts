@@ -20,7 +20,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
     <div class="stub-page">
       <h2 class="stub-page__title">Knowledge Graph</h2>
       <app-empty-state
-        icon="\u{1F578}"
+        icon="🕸"
         message="Knowledge Graph summary is coming soon. This feature requires the Knowledge Graph Engine (EPIC-003) to be designed and implemented."
       />
     </div>
