@@ -8,7 +8,7 @@ import { DocumentDetailComponent } from './document-management/document-detail.c
 import { KgSummaryPlaceholderComponent } from './stubs/kg-summary-placeholder.component';
 import { SessionBrowserPlaceholderComponent } from './stubs/session-browser-placeholder.component';
 import { SettingsPageComponent } from './settings/settings-page.component';
-import { UsageDashboardPlaceholderComponent } from './stubs/usage-dashboard-placeholder.component';
+import { UsageDashboardComponent } from './usage-dashboard/usage-dashboard.component';
 
 /**
  * Admin feature routes (curator role enforced by parent route guard).
@@ -30,7 +30,7 @@ export const ADMIN_ROUTES: Routes = [
       { path: 'knowledge-graph', component: KgSummaryPlaceholderComponent },
       { path: 'sessions', component: SessionBrowserPlaceholderComponent },
       { path: 'settings', component: SettingsPageComponent },
-      { path: 'usage', component: UsageDashboardPlaceholderComponent },
+      { path: 'usage', component: UsageDashboardComponent },
     ],
   },
 ];

@@ -1,0 +1,66 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.model-config {
+  background: $color-bg-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+}
+
+.model-config__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.model-config__title {
+  @include heading-md;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+.model-config__link {
+  @include body-sm;
+  color: $color-accent-primary;
+  text-decoration: none;
+
+  &:hover {
+    color: $color-accent-hover;
+    text-decoration: underline;
+  }
+}
+
+.model-config__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $spacing-md;
+}
+
+.model-config__slot {
+  background: $color-bg-tertiary;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  padding: $spacing-md;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.model-config__capability {
+  @include label;
+  color: $color-accent-primary;
+}
+
+.model-config__model {
+  @include body-base;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.model-config__params {
+  @include body-xs;
+  color: $color-text-muted;
+}

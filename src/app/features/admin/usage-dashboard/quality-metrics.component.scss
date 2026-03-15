@@ -1,0 +1,115 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.quality {
+  background: $color-bg-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+}
+
+.quality__title {
+  @include heading-md;
+  color: $color-text-primary;
+  margin: 0 0 $spacing-md 0;
+}
+
+.quality__table-wrap {
+  overflow-x: auto;
+}
+
+.quality__table {
+  width: 100%;
+  border-collapse: collapse;
+  @include body-sm;
+
+  th,
+  td {
+    padding: $spacing-sm $spacing-md;
+    text-align: left;
+    border-bottom: 1px solid $color-border;
+  }
+
+  th {
+    color: $color-text-muted;
+    font-weight: $font-weight-medium;
+    white-space: nowrap;
+  }
+
+  td {
+    color: $color-text-secondary;
+  }
+
+  tbody tr:hover {
+    background: $color-accent-muted;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.quality__num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.quality__indicator {
+  font-weight: $font-weight-medium;
+
+  &--green {
+    color: $color-success;
+  }
+
+  &--amber {
+    color: $color-warning;
+  }
+
+  &--red {
+    color: $color-error;
+  }
+}
+
+.quality__feedback {
+  display: inline-flex;
+  gap: $spacing-xs;
+  align-items: center;
+}
+
+.quality__feedback-pos {
+  color: $color-success;
+}
+
+.quality__feedback-neg {
+  color: $color-error;
+}
+
+.quality__dist {
+  display: flex;
+  height: 12px;
+  min-width: 80px;
+  border-radius: $radius-sm;
+  overflow: hidden;
+  gap: 1px;
+}
+
+.quality__dist-seg {
+  min-width: 2px;
+
+  &--red {
+    background: $color-error;
+  }
+
+  &--amber {
+    background: $color-warning;
+  }
+
+  &--ok {
+    background: $color-info;
+  }
+
+  &--green {
+    background: $color-success;
+  }
+}

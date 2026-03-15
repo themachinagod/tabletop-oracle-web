@@ -31,11 +31,12 @@ describe('AdminSidebarComponent', () => {
     expect(component.navItems[0].disabled).toBe(false);
   });
 
-  it('navItems_Enabled_GameLibraryAndSettings', () => {
+  it('navItems_Enabled_GameLibrarySettingsAndUsage', () => {
     const enabledItems = component.navItems.filter((item) => !item.disabled);
-    expect(enabledItems.length).toBe(2);
+    expect(enabledItems.length).toBe(3);
     expect(enabledItems[0].label).toBe('Game Library');
     expect(enabledItems[1].label).toBe('Settings');
+    expect(enabledItems[2].label).toBe('Usage');
   });
 
   it('navItems_Disabled_IncludesRemainingStubs', () => {
@@ -44,7 +45,7 @@ describe('AdminSidebarComponent', () => {
       .map((item) => item.label);
     expect(disabledLabels).toContain('Knowledge Graph');
     expect(disabledLabels).toContain('Sessions');
-    expect(disabledLabels).toContain('Usage');
+    expect(disabledLabels).not.toContain('Usage');
     expect(disabledLabels).not.toContain('Settings');
   });
 
@@ -56,24 +57,24 @@ describe('AdminSidebarComponent', () => {
 
   it('render_EnabledItems_RenderedAsAnchorTags', () => {
     const anchors = fixture.nativeElement.querySelectorAll('a.admin-sidebar__link');
-    // Game Library + Settings + Switch to Play
-    expect(anchors.length).toBe(3);
+    // Game Library + Settings + Usage + Switch to Play
+    expect(anchors.length).toBe(4);
   });
 
   it('render_DisabledItems_RenderedAsSpans', () => {
     const spans = fixture.nativeElement.querySelectorAll('span.admin-sidebar__link--disabled');
-    expect(spans.length).toBe(3);
+    expect(spans.length).toBe(2);
   });
 
   it('render_DisabledItems_ShowSoonBadge', () => {
     const badges = fixture.nativeElement.querySelectorAll('.admin-sidebar__badge');
-    expect(badges.length).toBe(3);
+    expect(badges.length).toBe(2);
     expect(badges[0].textContent.trim()).toBe('Soon');
   });
 
   it('render_DisabledItems_HaveAriaDisabled', () => {
     const disabled = fixture.nativeElement.querySelectorAll('[aria-disabled="true"]');
-    expect(disabled.length).toBe(3);
+    expect(disabled.length).toBe(2);
   });
 
   it('render_Footer_ContainsSwitchToPlayLink', () => {

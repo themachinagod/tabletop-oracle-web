@@ -1,0 +1,109 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.guardrail-status {
+  background: $color-bg-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+}
+
+.guardrail-status__title {
+  @include heading-md;
+  color: $color-text-primary;
+  margin: 0 0 $spacing-md 0;
+}
+
+.guardrail-status__banner {
+  @include body-sm;
+  background: rgba($color-warning, 0.12);
+  color: $color-warning;
+  border: 1px solid rgba($color-warning, 0.3);
+  border-radius: $radius-sm;
+  padding: $spacing-sm $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.guardrail-status__row {
+  margin-bottom: $spacing-md;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.guardrail-status__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-xs;
+}
+
+.guardrail-status__label {
+  @include body-sm;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+}
+
+.guardrail-status__badge {
+  @include label;
+  padding: 2px $spacing-sm;
+  border-radius: $radius-pill;
+
+  &--green {
+    background: rgba($color-success, 0.15);
+    color: $color-success;
+  }
+
+  &--amber {
+    background: rgba($color-warning, 0.15);
+    color: $color-warning;
+  }
+
+  &--red {
+    background: rgba($color-error, 0.15);
+    color: $color-error;
+  }
+
+  &--disabled {
+    background: rgba($color-text-disabled, 0.15);
+    color: $color-text-disabled;
+  }
+}
+
+.guardrail-status__bar-track {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: $radius-pill;
+  overflow: hidden;
+  margin-bottom: $spacing-xs;
+}
+
+.guardrail-status__bar-fill {
+  height: 100%;
+  border-radius: $radius-pill;
+  transition: width $transition-base;
+
+  &--green {
+    background: $color-success;
+  }
+
+  &--amber {
+    background: $color-warning;
+  }
+
+  &--red {
+    background: $color-error;
+  }
+
+  &--disabled {
+    background: $color-text-disabled;
+  }
+}
+
+.guardrail-status__numbers {
+  @include body-xs;
+  color: $color-text-muted;
+  font-variant-numeric: tabular-nums;
+}
