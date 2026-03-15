@@ -2,7 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, of, throwError } from 'rxjs';
 import { PaginatedResult } from '../../models/api.model';
-import { SessionSummary } from '../../models/session.model';
+import { SessionCreate, SessionSummary } from '../../models/session.model';
 import { ApiService } from '../api/api.service';
 import { SessionService } from './session.service';
 
@@ -10,6 +10,7 @@ describe('SessionService', () => {
   let service: SessionService;
   let mockApi: {
     getPaginated: ReturnType<typeof vi.fn>;
+    post: ReturnType<typeof vi.fn>;
     patch: ReturnType<typeof vi.fn>;
   };
 
@@ -36,6 +37,7 @@ describe('SessionService', () => {
   beforeEach(() => {
     mockApi = {
       getPaginated: vi.fn().mockReturnValue(of(mockPaginatedResult)),
+      post: vi.fn().mockReturnValue(of(mockSession)),
       patch: vi.fn().mockReturnValue(of(mockSession)),
     };
 
@@ -119,6 +121,46 @@ describe('SessionService', () => {
       mockApi.getPaginated.mockReturnValue(throwError(() => error));
 
       await expect(firstValueFrom(service.listSessions())).rejects.toThrow('Network error');
+    });
+  });
+
+  describe('createSession', () => {
+    it('createSession_ValidPayload_PostsToSessionsEndpoint', async () => {
+      const payload: SessionCreate = {
+        game_id: 'game-1',
+        expansion_ids: ['exp-1'],
+        player_count: 4,
+        name: 'Friday night Catan',
+      };
+
+      const result = await firstValueFrom(service.createSession(payload));
+
+      expect(result).toEqual(mockSession);
+      expect(mockApi.post).toHaveBeenCalledWith('/sessions', payload);
+    });
+
+    it('createSession_NoPlayerCount_PostsWithoutPlayerCount', async () => {
+      const payload: SessionCreate = {
+        game_id: 'game-1',
+        expansion_ids: [],
+        name: 'Quick game',
+      };
+
+      await firstValueFrom(service.createSession(payload));
+
+      expect(mockApi.post).toHaveBeenCalledWith('/sessions', payload);
+    });
+
+    it('createSession_ApiError_PropagatesError', async () => {
+      mockApi.post.mockReturnValue(throwError(() => new Error('Server error')));
+
+      const payload: SessionCreate = {
+        game_id: 'game-1',
+        expansion_ids: [],
+        name: 'Test',
+      };
+
+      await expect(firstValueFrom(service.createSession(payload))).rejects.toThrow('Server error');
     });
   });
 

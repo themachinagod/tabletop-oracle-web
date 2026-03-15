@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PaginatedResult } from '../../models/api.model';
 import {
+  SessionCreate,
   SessionFilters,
   SessionStatus,
   SessionStatusUpdate,
@@ -33,6 +34,16 @@ export class SessionService {
   listSessions(filters: SessionFilters = {}): Observable<PaginatedResult<SessionSummary>> {
     const params = this.buildFilterParams(filters);
     return this.api.getPaginated<SessionSummary>('/sessions', params);
+  }
+
+  /**
+   * Create a new game session.
+   *
+   * @param data - Session creation payload (game_id, expansion_ids, player_count, name).
+   * @returns Observable of the created session summary.
+   */
+  createSession(data: SessionCreate): Observable<SessionSummary> {
+    return this.api.post<SessionSummary>('/sessions', data);
   }
 
   /**
