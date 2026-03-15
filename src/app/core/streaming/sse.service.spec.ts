@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { NgZone } from '@angular/core';
 import { SseService } from './sse.service';
 import { SseEvent } from './sse-event.model';
+import { SseError } from './sse-error.model';
 
 // ---------------------------------------------------------------------------
 // EventSource mock
@@ -75,6 +76,16 @@ class MockEventSource {
   simulateServerClose(): void {
     this.readyState = MockEventSource.CLOSED;
     this.onerror?.(new Event('error'));
+  }
+
+  /**
+   * Simulate a terminal HTTP error (e.g., 401, 404).
+   * Sets readyState to CLOSED and attaches a status to the error event.
+   */
+  simulateHttpError(status: number): void {
+    this.readyState = MockEventSource.CLOSED;
+    const event = Object.assign(new Event('error'), { status });
+    this.onerror?.(event);
   }
 }
 
@@ -191,10 +202,10 @@ describe('SseService', () => {
       sub.unsubscribe();
     });
 
-    it('should error on invalid JSON data', () => {
-      let errorCaught: Error | null = null;
+    it('should emit SseError with parse kind on invalid JSON data', () => {
+      let errorCaught: SseError | null = null;
       const sub = service.connect('/stream').subscribe({
-        error: (e: Error) => {
+        error: (e: SseError) => {
           errorCaught = e;
         },
       });
@@ -203,7 +214,9 @@ describe('SseService', () => {
       mock.simulateOpen();
       mock.simulateRawMessage('not valid json');
 
-      expect(errorCaught).toBeTruthy();
+      expect(errorCaught).toBeInstanceOf(SseError);
+      expect(errorCaught!.kind).toBe('parse');
+      expect(errorCaught!.terminal).toBe(true);
       expect(errorCaught!.message).toContain('Failed to parse SSE event data');
 
       sub.unsubscribe();
@@ -353,9 +366,6 @@ describe('SseService', () => {
         },
       });
 
-      // Trigger consecutive retries without calling simulateOpen (which
-      // would reset the retry counter). Each retry fires immediately
-      // after the new EventSource is created.
       const expectedDelays = [1000, 2000, 4000, 8000, 16000];
 
       // Initial connection fails
@@ -402,16 +412,14 @@ describe('SseService', () => {
       sub.unsubscribe();
     });
 
-    it('should emit error after 5 consecutive failures', () => {
-      let errorCaught: Error | null = null;
+    it('should emit SseError with network kind after 5 consecutive failures', () => {
+      let errorCaught: SseError | null = null;
       const sub = service.connect('/stream').subscribe({
-        error: (e: Error) => {
+        error: (e: SseError) => {
           errorCaught = e;
         },
       });
 
-      // Trigger 5 consecutive failures without calling simulateOpen
-      // (no successful connection resets the counter).
       const delays = [1000, 2000, 4000, 8000, 16000];
 
       // Initial connection fails immediately
@@ -419,25 +427,38 @@ describe('SseService', () => {
 
       for (const delay of delays) {
         vi.advanceTimersByTime(delay);
-        // Each reconnected EventSource also fails immediately
         latestMock().simulateRetryableError();
       }
 
-      // After the 5th retry failure, the error should be emitted
-      // (6 total failures: initial + 5 retries)
-      expect(errorCaught).toBeTruthy();
+      expect(errorCaught).toBeInstanceOf(SseError);
+      expect(errorCaught!.kind).toBe('network');
+      expect(errorCaught!.terminal).toBe(false);
+      expect(errorCaught!.attempts).toBe(5);
       expect(errorCaught!.message).toContain('SSE connection failed after 5 consecutive retries');
 
       sub.unsubscribe();
     });
 
+    it('should include the URL in the SseError on max retries', () => {
+      let errorCaught: SseError | null = null;
+      const sub = service.connect('/api/v1/sessions/abc/stream').subscribe({
+        error: (e: SseError) => {
+          errorCaught = e;
+        },
+      });
+
+      latestMock().simulateRetryableError();
+      for (const delay of [1000, 2000, 4000, 8000, 16000]) {
+        vi.advanceTimersByTime(delay);
+        latestMock().simulateRetryableError();
+      }
+
+      expect(errorCaught!.url).toBe('/api/v1/sessions/abc/stream');
+
+      sub.unsubscribe();
+    });
+
     it('should cap retry delay at 30 seconds', () => {
-      // We need to check that even with many retries, delay never exceeds 30s.
-      // With factor 2: 1s, 2s, 4s, 8s, 16s — all under 30s.
-      // If we had more retries, 32s would be capped to 30s.
-      // We test indirectly by verifying the backoff formula caps correctly.
-      // The 5-retry limit prevents us from reaching 32s, so this tests
-      // the implementation uses Math.min correctly.
       const sub = service.connect('/stream').subscribe({
         error: () => {
           /* expected */
@@ -448,7 +469,7 @@ describe('SseService', () => {
       for (let i = 0; i < 5; i++) {
         latestMock().simulateOpen();
         latestMock().simulateRetryableError();
-        vi.advanceTimersByTime(30_000); // Advance past max possible delay
+        vi.advanceTimersByTime(30_000);
       }
 
       // Should have created 6 instances (initial + 5 retries)
@@ -467,11 +488,9 @@ describe('SseService', () => {
       latestMock().simulateOpen();
       latestMock().simulateRetryableError();
 
-      // Retry is scheduled but not yet fired
       const countBefore = mockInstances.length;
       sub.unsubscribe();
 
-      // Advance past all possible delays — should NOT create a new instance
       vi.advanceTimersByTime(60_000);
       expect(mockInstances).toHaveLength(countBefore);
     });
@@ -487,14 +506,335 @@ describe('SseService', () => {
       firstMock.simulateOpen();
       firstMock.simulateRetryableError();
 
-      // The error handler calls close() on the source
       expect(firstMock.closed).toBe(true);
 
       vi.advanceTimersByTime(1000);
-      // New instance created
       expect(mockInstances).toHaveLength(2);
 
       sub.unsubscribe();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // Stale connection detection
+  // -------------------------------------------------------------------------
+
+  describe('stale connection detection', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('should trigger reconnect after 30s with no events', () => {
+      const sub = service.connect('/stream').subscribe({
+        error: () => {
+          /* expected */
+        },
+      });
+
+      latestMock().simulateOpen();
+
+      // No events for 30 seconds
+      expect(mockInstances).toHaveLength(1);
+      vi.advanceTimersByTime(30_000);
+
+      // Stale detection fires, old connection closed
+      expect(mockInstances[0]!.closed).toBe(true);
+
+      // After backoff delay (1s for first retry), reconnect happens
+      vi.advanceTimersByTime(1000);
+      expect(mockInstances).toHaveLength(2);
+
+      sub.unsubscribe();
+    });
+
+    it('should reset stale timer when heartbeat is received', () => {
+      const sub = service.connect('/stream').subscribe({
+        error: () => {
+          /* expected */
+        },
+      });
+
+      const mock = latestMock();
+      mock.simulateOpen();
+
+      // Advance 20s, then receive heartbeat
+      vi.advanceTimersByTime(20_000);
+      mock.simulateMessage({
+        type: 'heartbeat',
+        timestamp: '2026-03-14T10:30:00Z',
+        payload: {},
+      });
+
+      // Advance another 20s (total 40s from start, but only 20s from heartbeat)
+      vi.advanceTimersByTime(20_000);
+      // Should NOT have triggered stale reconnect
+      expect(mockInstances).toHaveLength(1);
+      expect(mock.closed).toBe(false);
+
+      // 10 more seconds (30s from heartbeat) triggers stale
+      vi.advanceTimersByTime(10_000);
+      expect(mock.closed).toBe(true);
+
+      sub.unsubscribe();
+    });
+
+    it('should reset stale timer when non-heartbeat event is received', () => {
+      const sub = service.connect('/stream').subscribe({
+        error: () => {
+          /* expected */
+        },
+      });
+
+      const mock = latestMock();
+      mock.simulateOpen();
+
+      // Advance 25s, then receive a data event
+      vi.advanceTimersByTime(25_000);
+      mock.simulateMessage({
+        type: 'stream.token',
+        timestamp: '2026-03-14T10:30:00Z',
+        payload: { token: 'x' },
+      });
+
+      // 25s from data event: no stale trigger
+      vi.advanceTimersByTime(25_000);
+      expect(mockInstances).toHaveLength(1);
+      expect(mock.closed).toBe(false);
+
+      sub.unsubscribe();
+    });
+
+    it('should emit SseError with stale kind when stale triggers and retries exhaust', () => {
+      let errorCaught: SseError | null = null;
+      const sub = service.connect('/stream').subscribe({
+        error: (e: SseError) => {
+          errorCaught = e;
+        },
+      });
+
+      // Connection opens, then goes stale (no events for 30s).
+      // The stale timeout fires, which closes the connection and
+      // starts the retry cycle. All subsequent reconnection attempts
+      // fail immediately (never open), exhausting the retry limit.
+      latestMock().simulateOpen();
+      vi.advanceTimersByTime(30_000); // stale fires (retryCount becomes 1)
+
+      // Now the reconnection attempts fail without opening
+      const delays = [1000, 2000, 4000, 8000];
+      for (const delay of delays) {
+        vi.advanceTimersByTime(delay);
+        latestMock().simulateRetryableError(); // retryCount increments
+      }
+
+      // 5th retry also fails
+      vi.advanceTimersByTime(16_000);
+      latestMock().simulateRetryableError();
+
+      expect(errorCaught).toBeInstanceOf(SseError);
+      // The initial trigger was stale, but subsequent failures are network.
+      // The error kind reflects the last reason.
+      expect(errorCaught!.kind).toBe('network');
+      expect(errorCaught!.attempts).toBe(5);
+
+      sub.unsubscribe();
+    });
+
+    it('should clear stale timer on unsubscribe', () => {
+      const sub = service.connect('/stream').subscribe({
+        error: () => {
+          /* expected */
+        },
+      });
+
+      latestMock().simulateOpen();
+
+      sub.unsubscribe();
+
+      // Advance past stale timeout — should NOT trigger reconnect
+      vi.advanceTimersByTime(60_000);
+      expect(mockInstances).toHaveLength(1);
+    });
+
+    it('should clear stale timer on server close', () => {
+      let completed = false;
+      const sub = service.connect('/stream').subscribe({
+        complete: () => {
+          completed = true;
+        },
+      });
+
+      latestMock().simulateOpen();
+      latestMock().simulateServerClose();
+
+      expect(completed).toBe(true);
+
+      // Advance past stale timeout — should NOT trigger reconnect
+      vi.advanceTimersByTime(60_000);
+      expect(mockInstances).toHaveLength(1);
+
+      sub.unsubscribe();
+    });
+
+    it('should clear stale timer on retryable error', () => {
+      const sub = service.connect('/stream').subscribe({
+        error: () => {
+          /* expected */
+        },
+      });
+
+      latestMock().simulateOpen();
+
+      // Advance 15s, then trigger a retryable error
+      vi.advanceTimersByTime(15_000);
+      latestMock().simulateRetryableError();
+
+      // Stale timer should be cleared — only the retry timer should fire
+      vi.advanceTimersByTime(1000);
+      expect(mockInstances).toHaveLength(2);
+
+      // Advance past what would have been the original stale timeout
+      // Should NOT trigger a second reconnect
+      latestMock().simulateOpen();
+      vi.advanceTimersByTime(15_000);
+      expect(mockInstances).toHaveLength(2);
+
+      sub.unsubscribe();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // Terminal error handling (401, 404)
+  // -------------------------------------------------------------------------
+
+  describe('terminal errors', () => {
+    it('should emit SseError with auth kind on 401 and not retry', () => {
+      vi.useFakeTimers();
+
+      let errorCaught: SseError | null = null;
+      const sub = service.connect('/stream').subscribe({
+        error: (e: SseError) => {
+          errorCaught = e;
+        },
+      });
+
+      latestMock().simulateHttpError(401);
+
+      expect(errorCaught).toBeInstanceOf(SseError);
+      expect(errorCaught!.kind).toBe('auth');
+      expect(errorCaught!.terminal).toBe(true);
+      expect(errorCaught!.attempts).toBe(0);
+      expect(errorCaught!.message).toContain('authentication required');
+
+      // No retry should be scheduled
+      vi.advanceTimersByTime(60_000);
+      expect(mockInstances).toHaveLength(1);
+
+      vi.useRealTimers();
+      sub.unsubscribe();
+    });
+
+    it('should emit SseError with not-found kind on 404 and not retry', () => {
+      vi.useFakeTimers();
+
+      let errorCaught: SseError | null = null;
+      const sub = service.connect('/stream').subscribe({
+        error: (e: SseError) => {
+          errorCaught = e;
+        },
+      });
+
+      latestMock().simulateHttpError(404);
+
+      expect(errorCaught).toBeInstanceOf(SseError);
+      expect(errorCaught!.kind).toBe('not-found');
+      expect(errorCaught!.terminal).toBe(true);
+      expect(errorCaught!.attempts).toBe(0);
+      expect(errorCaught!.message).toContain('resource not found');
+
+      vi.advanceTimersByTime(60_000);
+      expect(mockInstances).toHaveLength(1);
+
+      vi.useRealTimers();
+      sub.unsubscribe();
+    });
+
+    it('should include the URL in terminal SseErrors', () => {
+      let errorCaught: SseError | null = null;
+      const sub = service.connect('/api/v1/sessions/xyz/stream').subscribe({
+        error: (e: SseError) => {
+          errorCaught = e;
+        },
+      });
+
+      latestMock().simulateHttpError(401);
+
+      expect(errorCaught!.url).toBe('/api/v1/sessions/xyz/stream');
+
+      sub.unsubscribe();
+    });
+
+    it('should complete (not error) on server close without terminal status', () => {
+      let completed = false;
+      let errorCaught: unknown = null;
+      const sub = service.connect('/stream').subscribe({
+        complete: () => {
+          completed = true;
+        },
+        error: (e: unknown) => {
+          errorCaught = e;
+        },
+      });
+
+      latestMock().simulateOpen();
+      latestMock().simulateServerClose();
+
+      expect(completed).toBe(true);
+      expect(errorCaught).toBeNull();
+
+      sub.unsubscribe();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // SseError model
+  // -------------------------------------------------------------------------
+
+  describe('SseError model', () => {
+    it('should mark network errors as non-terminal', () => {
+      const error = new SseError('network', '/stream', 'test', 5);
+      expect(error.terminal).toBe(false);
+      expect(error.name).toBe('SseError');
+    });
+
+    it('should mark stale errors as non-terminal', () => {
+      const error = new SseError('stale', '/stream', 'test', 3);
+      expect(error.terminal).toBe(false);
+    });
+
+    it('should mark auth errors as terminal', () => {
+      const error = new SseError('auth', '/stream', 'test');
+      expect(error.terminal).toBe(true);
+      expect(error.attempts).toBe(0);
+    });
+
+    it('should mark not-found errors as terminal', () => {
+      const error = new SseError('not-found', '/stream', 'test');
+      expect(error.terminal).toBe(true);
+    });
+
+    it('should mark parse errors as terminal', () => {
+      const error = new SseError('parse', '/stream', 'test');
+      expect(error.terminal).toBe(true);
+    });
+
+    it('should extend Error', () => {
+      const error = new SseError('network', '/stream', 'some message', 2);
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe('some message');
     });
   });
 
@@ -547,8 +887,107 @@ describe('SseService', () => {
       });
 
       expect(events).toHaveLength(1);
-      // TypeScript ensures .payload.token is accessible
       expect(events[0]?.payload.token).toBe('typed');
+
+      sub.unsubscribe();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // Combined scenarios
+  // -------------------------------------------------------------------------
+
+  describe('combined scenarios', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('should handle stale then network error in sequence', () => {
+      const sub = service.connect('/stream').subscribe({
+        error: () => {
+          /* expected */
+        },
+      });
+
+      // Open, then go stale
+      latestMock().simulateOpen();
+      vi.advanceTimersByTime(30_000); // stale triggers
+      vi.advanceTimersByTime(1000); // backoff delay
+
+      // Second connection opens but then gets a network error
+      latestMock().simulateOpen();
+      latestMock().simulateRetryableError();
+
+      // Third retry (reset by open, so back to 1s delay)
+      vi.advanceTimersByTime(1000);
+      expect(mockInstances).toHaveLength(3);
+
+      sub.unsubscribe();
+    });
+
+    it('should handle events received between reconnection attempts', () => {
+      const events: SseEvent[] = [];
+      const sub = service.connect('/stream').subscribe({
+        next: (e) => events.push(e),
+        error: () => {
+          /* expected */
+        },
+      });
+
+      // First connection: receive some events then disconnect
+      latestMock().simulateOpen();
+      latestMock().simulateMessage({
+        type: 'stream.token',
+        timestamp: '2026-03-14T10:30:00Z',
+        payload: { token: 'before' },
+      });
+      latestMock().simulateRetryableError();
+
+      // Reconnect
+      vi.advanceTimersByTime(1000);
+
+      // Second connection: receive more events
+      latestMock().simulateOpen();
+      latestMock().simulateMessage({
+        type: 'stream.token',
+        timestamp: '2026-03-14T10:30:05Z',
+        payload: { token: 'after' },
+      });
+
+      expect(events).toHaveLength(2);
+      expect(events[0]!.payload).toEqual({ token: 'before' });
+      expect(events[1]!.payload).toEqual({ token: 'after' });
+
+      sub.unsubscribe();
+    });
+
+    it('should handle terminal error after successful reconnection', () => {
+      let errorCaught: SseError | null = null;
+      const sub = service.connect('/stream').subscribe({
+        error: (e: SseError) => {
+          errorCaught = e;
+        },
+      });
+
+      // First connection, network error, reconnect
+      latestMock().simulateOpen();
+      latestMock().simulateRetryableError();
+      vi.advanceTimersByTime(1000);
+
+      // Second connection gets 401
+      latestMock().simulateHttpError(401);
+
+      expect(errorCaught).toBeInstanceOf(SseError);
+      expect(errorCaught!.kind).toBe('auth');
+      expect(errorCaught!.terminal).toBe(true);
+
+      // No further retries
+      vi.advanceTimersByTime(60_000);
+      expect(mockInstances).toHaveLength(2);
 
       sub.unsubscribe();
     });
