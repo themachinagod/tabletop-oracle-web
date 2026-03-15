@@ -9,7 +9,6 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { ComplexityLevel, GameFilters, GameSortOption, TagCount } from '../../../models/game.model';
 
@@ -44,7 +43,7 @@ const COMPLEXITY_LEVELS: ComplexityLevel[] = ['light', 'medium', 'heavy'];
 @Component({
   selector: 'app-game-filter',
   standalone: true,
-  imports: [FormsModule],
+  imports: [],
   templateUrl: './game-filter.component.html',
   styleUrl: './game-filter.component.scss',
 })

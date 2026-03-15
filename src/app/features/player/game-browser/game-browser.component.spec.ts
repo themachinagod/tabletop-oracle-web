@@ -168,6 +168,18 @@ describe('GameBrowserComponent', () => {
     });
   });
 
+  describe('tag loading failure', () => {
+    it('ngOnInit_TagsApiFails_StillLoadsGames', () => {
+      mockGameService.getTags.mockReturnValue(throwError(() => new Error('tags fail')));
+      fixture.detectChanges();
+
+      expect(component.games()).toEqual([mockGame]);
+      expect(component.availableTags()).toEqual([]);
+      expect(component.loading()).toBe(false);
+      expect(component.error()).toBeNull();
+    });
+  });
+
   describe('error handling', () => {
     it('dismissError_ClearsError', () => {
       mockGameService.listGames.mockReturnValue(throwError(() => new Error('fail')));

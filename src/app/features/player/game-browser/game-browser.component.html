@@ -21,7 +21,9 @@
       @if (hasActiveFilters()) {
         <app-empty-state message="No games match your search. Try adjusting your filters." />
       } @else {
-        <app-empty-state message="No games are available yet." />
+        <app-empty-state
+          message="No games are available yet. A curator needs to add games before you can start a session."
+        />
       }
     } @else {
       <div class="game-browser__grid">

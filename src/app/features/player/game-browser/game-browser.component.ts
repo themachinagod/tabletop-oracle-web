@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { catchError, forkJoin, of } from 'rxjs';
 import { PaginationMeta } from '../../../models/api.model';
 import { GameFilters, GameSummary, TagCount } from '../../../models/game.model';
 import { GameService } from '../../../core/services/game.service';
@@ -93,7 +93,7 @@ export class GameBrowserComponent implements OnInit {
 
     forkJoin({
       games: this.gameService.listGames(),
-      tags: this.gameService.getTags(),
+      tags: this.gameService.getTags().pipe(catchError(() => of([] as TagCount[]))),
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
