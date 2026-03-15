@@ -1,0 +1,74 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.doc-meta__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: $spacing-md;
+}
+
+.doc-meta__item {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.doc-meta__label {
+  @include label;
+  color: $color-text-muted;
+}
+
+.doc-meta__value {
+  @include body-base;
+  color: $color-text-primary;
+
+  &--uppercase {
+    text-transform: uppercase;
+  }
+}
+
+.doc-meta__editable {
+  display: flex;
+  align-items: center;
+}
+
+.doc-meta__select {
+  @include body-sm;
+  background: $color-bg-tertiary;
+  color: $color-text-primary;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  padding: $spacing-xs $spacing-sm;
+  min-height: $touch-target-min;
+  appearance: auto;
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: -1px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.doc-meta__error {
+  @include body-sm;
+  margin-top: $spacing-md;
+  padding: $spacing-sm $spacing-md;
+  background: $color-error-bg;
+  color: $color-error;
+  border-radius: $radius-md;
+  border: 1px solid rgba($color-error, 0.3);
+}
+
+.doc-meta__error-label {
+  font-weight: $font-weight-semibold;
+}
+
+.doc-meta__feedback {
+  @include body-xs;
+  color: $color-success;
+  margin: $spacing-sm 0 0;
+}

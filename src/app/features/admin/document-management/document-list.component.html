@@ -1,0 +1,95 @@
+@if (error()) {
+  <app-error-banner [message]="error()!" (dismissed)="dismissError()" />
+}
+
+<app-document-upload
+  [gameId]="gameId"
+  [expansions]="expansions"
+  (uploaded)="onDocumentUploaded()"
+/>
+
+@if (loading()) {
+  <app-loading-spinner message="Loading documents..." />
+} @else if (documents().length === 0) {
+  <app-empty-state message="No documents for this game. Upload your first document above." />
+} @else {
+  <div class="document-list">
+    <table class="document-list__table" role="table">
+      <thead>
+        <tr>
+          <th class="document-list__th">Name</th>
+          <th class="document-list__th">Type</th>
+          <th class="document-list__th">Expansion</th>
+          <th class="document-list__th">Status</th>
+          <th class="document-list__th document-list__th--right">Version</th>
+          <th class="document-list__th document-list__th--right">Size</th>
+          <th class="document-list__th">Uploaded</th>
+          <th class="document-list__th document-list__th--right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (doc of documents(); track doc.id) {
+          <tr class="document-list__row" (click)="viewDocument(doc)" role="link" tabindex="0">
+            <td class="document-list__td document-list__td--name">
+              <span class="document-list__doc-name">{{ doc.name }}</span>
+              <span class="document-list__doc-format">{{ doc.format | uppercase }}</span>
+            </td>
+            <td class="document-list__td">
+              <app-document-type-badge [type]="doc.type" />
+            </td>
+            <td class="document-list__td">
+              {{ doc.expansion_name ?? 'Base Game' }}
+            </td>
+            <td class="document-list__td">
+              <app-document-status-badge [status]="doc.status" />
+            </td>
+            <td class="document-list__td document-list__td--right">
+              v{{ doc.current_version }}
+            </td>
+            <td class="document-list__td document-list__td--right">
+              {{ formatFileSize(doc.file_size) }}
+            </td>
+            <td class="document-list__td">
+              {{ doc.uploaded_at | relativeTime }}
+            </td>
+            <td class="document-list__td document-list__td--right document-list__td--actions">
+              <button
+                class="document-list__action-btn document-list__action-btn--view"
+                type="button"
+                (click)="viewDocument(doc); $event.stopPropagation()"
+                [attr.aria-label]="'View ' + doc.name"
+              >
+                View
+              </button>
+              <button
+                class="document-list__action-btn document-list__action-btn--delete"
+                type="button"
+                (click)="confirmDelete(doc); $event.stopPropagation()"
+                [disabled]="deleteInProgress()"
+                [attr.aria-label]="'Delete ' + doc.name"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
+
+@if (deleteTarget(); as target) {
+  <app-confirm-dialog
+    [open]="true"
+    title="Delete Document"
+    [message]="
+      'Are you sure you want to delete \'' +
+      target.name +
+      '\'? This will remove the document and its KG contributions. This cannot be undone.'
+    "
+    confirmLabel="Delete"
+    [destructive]="true"
+    (confirmed)="onDeleteConfirmed()"
+    (cancelled)="onDeleteCancelled()"
+  />
+}

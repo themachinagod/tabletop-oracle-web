@@ -1,0 +1,110 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.version-history__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.version-history__title {
+  @include heading-sm;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+.version-history__upload-label {
+  cursor: pointer;
+}
+
+.version-history__upload-btn {
+  @include body-sm;
+  display: inline-block;
+  background: $color-accent-primary;
+  color: $color-text-primary;
+  border-radius: $radius-md;
+  padding: $spacing-xs $spacing-md;
+  font-weight: $font-weight-medium;
+  min-height: $touch-target-min;
+  line-height: $touch-target-min;
+  transition: background $transition-fast;
+
+  &:hover:not(&--disabled) {
+    background: $color-accent-hover;
+  }
+
+  &--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.version-history__file-input {
+  display: none;
+}
+
+.version-history__empty {
+  @include body-sm;
+  color: $color-text-muted;
+}
+
+.version-history__list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.version-history__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: $color-bg-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-md;
+
+  &--active {
+    border-color: $color-accent-primary;
+    background: $color-accent-muted;
+  }
+}
+
+.version-history__item-info {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.version-history__version {
+  @include body-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.version-history__active-badge {
+  @include body-xs;
+  padding: 2px $spacing-xs;
+  border-radius: $radius-pill;
+  background: rgba($color-accent-primary, 0.15);
+  color: $color-accent-primary;
+  font-weight: $font-weight-medium;
+}
+
+.version-history__item-meta {
+  display: flex;
+  gap: $spacing-md;
+
+  span {
+    @include body-xs;
+    color: $color-text-muted;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .version-history__item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-xs;
+  }
+}

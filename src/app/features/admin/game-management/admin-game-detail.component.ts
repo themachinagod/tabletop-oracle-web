@@ -9,6 +9,7 @@ import { ErrorBannerComponent } from '../../../shared/components/error-banner/er
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 import { TagChipComponent } from '../../../shared/components/tag-chip/tag-chip.component';
 import { RelativeTimePipe } from '../../../shared/pipes/relative-time.pipe';
+import { DocumentListComponent } from '../document-management/document-list.component';
 import { ExpansionListComponent } from '../expansion-management/expansion-list.component';
 
 /** Available tab identifiers. */
@@ -18,8 +19,7 @@ type DetailTab = 'overview' | 'documents' | 'expansions';
  * Admin game detail view with tabbed layout.
  *
  * Displays game metadata, actions (edit, archive/restore), and tabs
- * for overview, documents, and expansions. Documents tab is a
- * placeholder until task #40 is implemented.
+ * for overview, documents, and expansions.
  *
  * Route: /admin/games/:gameId
  */
@@ -29,6 +29,7 @@ type DetailTab = 'overview' | 'documents' | 'expansions';
   imports: [
     ComplexityBadgeComponent,
     ConfirmDialogComponent,
+    DocumentListComponent,
     ErrorBannerComponent,
     ExpansionListComponent,
     LoadingSpinnerComponent,

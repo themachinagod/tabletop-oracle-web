@@ -1,0 +1,93 @@
+<div class="doc-meta">
+  <div class="doc-meta__grid">
+    <div class="doc-meta__item">
+      <span class="doc-meta__label">Name</span>
+      <span class="doc-meta__value">{{ document.name }}</span>
+    </div>
+
+    <div class="doc-meta__item">
+      <span class="doc-meta__label">Type</span>
+      <div class="doc-meta__editable">
+        <select
+          class="doc-meta__select"
+          [value]="document.type"
+          (change)="onTypeChange($any($event.target).value)"
+          [disabled]="saving()"
+          aria-label="Document type"
+        >
+          @for (opt of typeOptions; track opt) {
+            <option [value]="opt">{{ typeLabels[opt] }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="doc-meta__item">
+      <span class="doc-meta__label">Format</span>
+      <span class="doc-meta__value doc-meta__value--uppercase">{{ document.format }}</span>
+    </div>
+
+    <div class="doc-meta__item">
+      <span class="doc-meta__label">Status</span>
+      <app-document-status-badge [status]="document.status" />
+    </div>
+
+    <div class="doc-meta__item">
+      <span class="doc-meta__label">Expansion</span>
+      <div class="doc-meta__editable">
+        <select
+          class="doc-meta__select"
+          [value]="document.expansion_id ?? ''"
+          (change)="onExpansionChange($any($event.target).value)"
+          [disabled]="saving()"
+          aria-label="Expansion association"
+        >
+          <option value="">Base Game</option>
+          @for (exp of expansions; track exp.id) {
+            <option [value]="exp.id">{{ exp.name }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="doc-meta__item">
+      <span class="doc-meta__label">File Size</span>
+      <span class="doc-meta__value">{{ formatFileSize(document.file_size) }}</span>
+    </div>
+
+    <div class="doc-meta__item">
+      <span class="doc-meta__label">Version</span>
+      <span class="doc-meta__value">v{{ document.current_version }}</span>
+    </div>
+
+    <div class="doc-meta__item">
+      <span class="doc-meta__label">Uploaded</span>
+      <span class="doc-meta__value">{{ document.uploaded_at | relativeTime }}</span>
+    </div>
+
+    @if (document.processed_at) {
+      <div class="doc-meta__item">
+        <span class="doc-meta__label">Processed</span>
+        <span class="doc-meta__value">{{ document.processed_at | relativeTime }}</span>
+      </div>
+    }
+
+    @if (document.chunk_count != null) {
+      <div class="doc-meta__item">
+        <span class="doc-meta__label">Chunks</span>
+        <span class="doc-meta__value">{{ document.chunk_count }}</span>
+      </div>
+    }
+  </div>
+
+  @if (document.error_message) {
+    <div class="doc-meta__error" role="alert">
+      <span class="doc-meta__error-label">Processing Error:</span>
+      {{ document.error_message }}
+    </div>
+  }
+
+  @if (feedback()) {
+    <p class="doc-meta__feedback" role="status">{{ feedback() }}</p>
+  }
+</div>

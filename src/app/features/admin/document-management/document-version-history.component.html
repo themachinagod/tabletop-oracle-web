@@ -1,0 +1,49 @@
+@if (error()) {
+  <app-error-banner [message]="error()!" (dismissed)="dismissError()" />
+}
+
+<div class="version-history">
+  <div class="version-history__header">
+    <h3 class="version-history__title">Version History</h3>
+    <label class="version-history__upload-label">
+      <span class="version-history__upload-btn" [class.version-history__upload-btn--disabled]="uploading()">
+        {{ uploading() ? 'Uploading...' : 'Upload New Version' }}
+      </span>
+      <input
+        class="version-history__file-input"
+        type="file"
+        accept=".pdf,.md,.txt,.html,.docx"
+        (change)="onVersionFileSelected($event)"
+        [disabled]="uploading()"
+        aria-label="Upload new version"
+      />
+    </label>
+  </div>
+
+  @if (loading()) {
+    <app-loading-spinner message="Loading versions..." />
+  } @else if (versions().length === 0) {
+    <p class="version-history__empty">No version history available.</p>
+  } @else {
+    <div class="version-history__list">
+      @for (v of versions(); track v.version) {
+        <div
+          class="version-history__item"
+          [class.version-history__item--active]="v.is_active"
+        >
+          <div class="version-history__item-info">
+            <span class="version-history__version">v{{ v.version }}</span>
+            @if (v.is_active) {
+              <span class="version-history__active-badge">Active</span>
+            }
+          </div>
+          <div class="version-history__item-meta">
+            <span>{{ formatFileSize(v.file_size) }}</span>
+            <span>{{ v.uploaded_at | relativeTime }}</span>
+            <span>{{ v.uploaded_by_name }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

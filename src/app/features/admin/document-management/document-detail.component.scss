@@ -1,0 +1,147 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.doc-detail {
+  padding: $spacing-lg;
+}
+
+.doc-detail__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-lg;
+  gap: $spacing-md;
+}
+
+.doc-detail__header-left {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.doc-detail__back-btn {
+  @include body-sm;
+  background: transparent;
+  color: $color-accent-primary;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  align-self: flex-start;
+
+  &:hover {
+    color: $color-accent-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.doc-detail__title {
+  @include heading-xl;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+.doc-detail__badges {
+  display: flex;
+  gap: $spacing-sm;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.doc-detail__format-badge {
+  @include body-xs;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-pill;
+  background: rgba($color-text-muted, 0.1);
+  color: $color-text-muted;
+  font-weight: $font-weight-medium;
+}
+
+.doc-detail__header-actions {
+  display: flex;
+  gap: $spacing-sm;
+  flex-shrink: 0;
+}
+
+.doc-detail__retry-btn {
+  @include body-base;
+  background: $color-accent-primary;
+  color: $color-text-primary;
+  border: none;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  min-height: $touch-target-min;
+  transition: background $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $color-accent-hover;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.doc-detail__delete-btn {
+  @include body-base;
+  background: transparent;
+  color: $color-error;
+  border: 1px solid $color-error;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  min-height: $touch-target-min;
+  transition: background $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $color-error-bg;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-error;
+    outline-offset: 2px;
+  }
+}
+
+.doc-detail__sections {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+}
+
+.doc-detail__section {
+  margin-bottom: $spacing-md;
+}
+
+.doc-detail__section-title {
+  @include heading-sm;
+  color: $color-text-secondary;
+  margin: 0 0 $spacing-md;
+}
+
+@media (max-width: $breakpoint-md) {
+  .doc-detail__header {
+    flex-direction: column;
+  }
+
+  .doc-detail__header-actions {
+    align-self: flex-start;
+  }
+}

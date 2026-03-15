@@ -150,9 +150,7 @@
         }
 
         @case ('documents') {
-          <div class="game-detail__placeholder">
-            <p>Document management will be available in a future update.</p>
-          </div>
+          <app-document-list [gameId]="currentGameId" [expansions]="game()?.expansions ?? []" />
         }
 
         @case ('expansions') {
