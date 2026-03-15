@@ -1,0 +1,242 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.document-upload__zone {
+  border: 2px dashed $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-xl;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color $transition-fast,
+    background $transition-fast;
+
+  &:hover,
+  &--active {
+    border-color: $color-accent-primary;
+    background: $color-accent-muted;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.document-upload__zone-text {
+  @include body-base;
+  color: $color-text-secondary;
+  margin: 0 0 $spacing-xs;
+}
+
+.document-upload__browse-label {
+  cursor: pointer;
+}
+
+.document-upload__browse-link {
+  color: $color-accent-primary;
+  text-decoration: underline;
+
+  &:hover {
+    color: $color-accent-hover;
+  }
+}
+
+.document-upload__file-input {
+  display: none;
+}
+
+.document-upload__zone-hint {
+  @include body-xs;
+  color: $color-text-muted;
+  margin: 0;
+}
+
+.document-upload__items {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  margin-top: $spacing-md;
+}
+
+.document-upload__item {
+  background: $color-bg-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+
+  &--error {
+    border-color: $color-error;
+  }
+}
+
+.document-upload__item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.document-upload__item-filename {
+  @include body-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.document-upload__item-size {
+  @include body-xs;
+  color: $color-text-muted;
+  flex-shrink: 0;
+  margin-left: $spacing-sm;
+}
+
+.document-upload__item-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-sm;
+}
+
+.document-upload__field {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.document-upload__field-label {
+  @include body-xs;
+  color: $color-text-muted;
+}
+
+.document-upload__field-input,
+.document-upload__field-select {
+  @include body-sm;
+  background: $color-bg-tertiary;
+  color: $color-text-primary;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  padding: $spacing-xs $spacing-sm;
+  min-height: $touch-target-min;
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: -1px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.document-upload__field-select {
+  appearance: auto;
+}
+
+.document-upload__item-validation-error,
+.document-upload__item-error {
+  @include body-xs;
+  color: $color-error;
+  margin: $spacing-xs 0;
+}
+
+.document-upload__item-actions {
+  display: flex;
+  gap: $spacing-sm;
+  justify-content: flex-end;
+  margin-top: $spacing-sm;
+}
+
+.document-upload__uploading {
+  @include body-sm;
+  color: $color-info;
+  font-weight: $font-weight-medium;
+}
+
+.document-upload__upload-btn {
+  @include body-sm;
+  background: $color-accent-primary;
+  color: $color-text-primary;
+  border: none;
+  border-radius: $radius-md;
+  padding: $spacing-xs $spacing-md;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  min-height: $touch-target-min;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $color-accent-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.document-upload__remove-btn {
+  @include body-sm;
+  background: transparent;
+  color: $color-text-muted;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-xs $spacing-md;
+  cursor: pointer;
+  min-height: $touch-target-min;
+  transition:
+    color $transition-fast,
+    border-color $transition-fast;
+
+  &:hover:not(:disabled) {
+    color: $color-error;
+    border-color: $color-error;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.document-upload__batch-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.document-upload__upload-all-btn {
+  @include body-sm;
+  background: $color-accent-primary;
+  color: $color-text-primary;
+  border: none;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  min-height: $touch-target-min;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $color-accent-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .document-upload__item-fields {
+    grid-template-columns: 1fr;
+  }
+}

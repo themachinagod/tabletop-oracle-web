@@ -1,0 +1,82 @@
+@if (error()) {
+  <app-error-banner [message]="error()!" (dismissed)="dismissError()" />
+}
+
+@if (loading()) {
+  <app-loading-spinner message="Loading document..." />
+} @else if (document(); as doc) {
+  <section class="doc-detail">
+    <header class="doc-detail__header">
+      <div class="doc-detail__header-left">
+        <button
+          class="doc-detail__back-btn"
+          (click)="goBack()"
+          type="button"
+          aria-label="Back to game detail"
+        >
+          &larr; Back to Game
+        </button>
+        <h1 class="doc-detail__title">{{ doc.name }}</h1>
+        <div class="doc-detail__badges">
+          <app-document-type-badge [type]="doc.type" />
+          <span class="doc-detail__format-badge">{{ doc.format | uppercase }}</span>
+          <app-document-status-badge [status]="doc.status" />
+        </div>
+      </div>
+      <div class="doc-detail__header-actions">
+        @if (doc.status === 'error') {
+          <button
+            class="doc-detail__retry-btn"
+            (click)="retryProcessing()"
+            [disabled]="actionInProgress()"
+            type="button"
+          >
+            Retry Processing
+          </button>
+        }
+        <button
+          class="doc-detail__delete-btn"
+          (click)="confirmDelete()"
+          [disabled]="actionInProgress()"
+          type="button"
+        >
+          Delete
+        </button>
+      </div>
+    </header>
+
+    <div class="doc-detail__sections">
+      <section class="doc-detail__section">
+        <h2 class="doc-detail__section-title">Metadata</h2>
+        <app-document-metadata
+          [document]="doc"
+          [gameId]="currentGameId"
+          [expansions]="expansions()"
+          (documentUpdated)="onDocumentUpdated()"
+        />
+      </section>
+
+      <section class="doc-detail__section">
+        <app-document-version-history
+          [gameId]="currentGameId"
+          [documentId]="currentDocumentId"
+          (versionUploaded)="onVersionUploaded()"
+        />
+      </section>
+    </div>
+  </section>
+
+  <app-confirm-dialog
+    [open]="showDeleteDialog()"
+    title="Delete Document"
+    [message]="
+      'Are you sure you want to delete \'' +
+      doc.name +
+      '\'? This will remove the document and its KG contributions. This cannot be undone.'
+    "
+    confirmLabel="Delete"
+    [destructive]="true"
+    (confirmed)="onDeleteConfirmed()"
+    (cancelled)="onDeleteCancelled()"
+  />
+}

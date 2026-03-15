@@ -1,0 +1,137 @@
+<div class="document-upload">
+  <div
+    class="document-upload__zone"
+    [class.document-upload__zone--active]="isDragOver()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+    role="button"
+    tabindex="0"
+    aria-label="Drop files here or click to browse"
+  >
+    <p class="document-upload__zone-text">
+      Drag and drop files here, or
+      <label class="document-upload__browse-label">
+        <span class="document-upload__browse-link">choose files</span>
+        <input
+          class="document-upload__file-input"
+          type="file"
+          multiple
+          accept=".pdf,.md,.txt,.html,.docx"
+          (change)="onFileSelected($event)"
+          aria-label="Choose files to upload"
+        />
+      </label>
+    </p>
+    <p class="document-upload__zone-hint">Supported: PDF, Markdown, Text, HTML, DOCX (max 50MB)</p>
+  </div>
+
+  @if (uploadItems().length > 0) {
+    <div class="document-upload__items">
+      @for (item of uploadItems(); track item.file.name + $index) {
+        <div
+          class="document-upload__item"
+          [class.document-upload__item--error]="item.validationError || item.error"
+        >
+          <div class="document-upload__item-header">
+            <span class="document-upload__item-filename">{{ item.file.name }}</span>
+            <span class="document-upload__item-size">{{ formatFileSize(item.file.size) }}</span>
+          </div>
+
+          @if (item.validationError) {
+            <p class="document-upload__item-validation-error" role="alert">
+              {{ item.validationError }}
+            </p>
+          } @else {
+            <div class="document-upload__item-fields">
+              <div class="document-upload__field">
+                <label class="document-upload__field-label" [attr.for]="'doc-name-' + $index">
+                  Display Name
+                </label>
+                <input
+                  [id]="'doc-name-' + $index"
+                  class="document-upload__field-input"
+                  type="text"
+                  [value]="item.name"
+                  (input)="updateName($index, $any($event.target).value)"
+                  [disabled]="item.uploading"
+                />
+              </div>
+
+              <div class="document-upload__field">
+                <label class="document-upload__field-label" [attr.for]="'doc-type-' + $index">
+                  Type
+                </label>
+                <select
+                  [id]="'doc-type-' + $index"
+                  class="document-upload__field-select"
+                  [value]="item.type"
+                  (change)="updateType($index, $any($event.target).value)"
+                  [disabled]="item.uploading"
+                >
+                  @for (opt of typeOptions; track opt) {
+                    <option [value]="opt">{{ typeLabels[opt] }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="document-upload__field">
+                <label class="document-upload__field-label" [attr.for]="'doc-exp-' + $index">
+                  Expansion
+                </label>
+                <select
+                  [id]="'doc-exp-' + $index"
+                  class="document-upload__field-select"
+                  [value]="item.expansionId ?? ''"
+                  (change)="updateExpansion($index, $any($event.target).value)"
+                  [disabled]="item.uploading"
+                >
+                  <option value="">Base Game</option>
+                  @for (exp of expansions; track exp.id) {
+                    <option [value]="exp.id">{{ exp.name }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+
+            @if (item.error) {
+              <p class="document-upload__item-error" role="alert">{{ item.error }}</p>
+            }
+
+            <div class="document-upload__item-actions">
+              @if (item.uploading) {
+                <span class="document-upload__uploading">Uploading...</span>
+              } @else {
+                <button
+                  class="document-upload__upload-btn"
+                  type="button"
+                  (click)="uploadFile($index)"
+                  [attr.aria-label]="'Upload ' + item.name"
+                >
+                  Upload
+                </button>
+              }
+              <button
+                class="document-upload__remove-btn"
+                type="button"
+                (click)="removeItem($index)"
+                [disabled]="item.uploading"
+                [attr.aria-label]="'Remove ' + item.file.name"
+              >
+                Remove
+              </button>
+            </div>
+          }
+        </div>
+      }
+
+      @if (hasUploadableItems) {
+        <div class="document-upload__batch-actions">
+          <button class="document-upload__upload-all-btn" type="button" (click)="uploadAll()">
+            Upload All
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

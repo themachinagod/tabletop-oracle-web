@@ -90,6 +90,21 @@ export class ApiService {
   }
 
   /**
+   * Send a PUT request and unwrap the response envelope.
+   *
+   * @param path - API path relative to base URL.
+   * @param body - Request body payload.
+   * @returns Observable of the unwrapped updated resource.
+   */
+  put<T>(path: string, body: unknown): Observable<T> {
+    return this.http
+      .put<ApiResponse<T>>(`${this.baseUrl}${path}`, body, {
+        withCredentials: true,
+      })
+      .pipe(map((response) => response.data));
+  }
+
+  /**
    * Send a DELETE request and unwrap the response envelope.
    *
    * @param path - API path relative to base URL.
@@ -98,6 +113,25 @@ export class ApiService {
   delete<T>(path: string): Observable<T> {
     return this.http
       .delete<ApiResponse<T>>(`${this.baseUrl}${path}`, {
+        withCredentials: true,
+      })
+      .pipe(map((response) => response.data));
+  }
+
+  /**
+   * Send a POST request with multipart/form-data and unwrap the response envelope.
+   *
+   * Used for file uploads. The caller builds the FormData object.
+   * Content-Type is NOT set explicitly — the browser adds the
+   * multipart boundary automatically.
+   *
+   * @param path - API path relative to base URL.
+   * @param formData - FormData payload containing file and metadata.
+   * @returns Observable of the unwrapped created resource.
+   */
+  postMultipart<T>(path: string, formData: FormData): Observable<T> {
+    return this.http
+      .post<ApiResponse<T>>(`${this.baseUrl}${path}`, formData, {
         withCredentials: true,
       })
       .pipe(map((response) => response.data));

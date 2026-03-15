@@ -1,0 +1,132 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.document-list {
+  margin-top: $spacing-lg;
+  overflow-x: auto;
+}
+
+.document-list__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.document-list__th {
+  @include label;
+  color: $color-text-muted;
+  text-align: left;
+  padding: $spacing-sm $spacing-md;
+  border-bottom: 1px solid $color-border;
+  white-space: nowrap;
+
+  &--right {
+    text-align: right;
+  }
+}
+
+.document-list__row {
+  cursor: pointer;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $color-bg-tertiary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: -2px;
+  }
+}
+
+.document-list__td {
+  @include body-sm;
+  color: $color-text-secondary;
+  padding: $spacing-sm $spacing-md;
+  border-bottom: 1px solid $color-border;
+  vertical-align: middle;
+  white-space: nowrap;
+
+  &--name {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    min-width: 0;
+  }
+
+  &--right {
+    text-align: right;
+  }
+
+  &--actions {
+    white-space: nowrap;
+  }
+}
+
+.document-list__doc-name {
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.document-list__doc-format {
+  @include body-xs;
+  color: $color-text-muted;
+  background: rgba($color-text-muted, 0.1);
+  padding: 2px $spacing-xs;
+  border-radius: $radius-sm;
+  flex-shrink: 0;
+}
+
+.document-list__action-btn {
+  @include body-xs;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: $radius-sm;
+  padding: $spacing-xs $spacing-sm;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  min-height: $touch-target-min;
+
+  &--view {
+    color: $color-accent-primary;
+
+    &:hover {
+      background: $color-accent-muted;
+    }
+  }
+
+  &--delete {
+    color: $color-error;
+
+    &:hover:not(:disabled) {
+      background: $color-error-bg;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .document-list__th:nth-child(6),
+  .document-list__td:nth-child(6) {
+    display: none;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .document-list__th:nth-child(3),
+  .document-list__td:nth-child(3),
+  .document-list__th:nth-child(5),
+  .document-list__td:nth-child(5) {
+    display: none;
+  }
+}
