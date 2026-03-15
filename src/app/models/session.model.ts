@@ -18,3 +18,22 @@ export interface SessionSummary {
   last_message_preview: string | null;
   message_count: number;
 }
+
+/** Filter parameters for listing sessions. */
+export interface SessionFilters {
+  /** Filter by session status. */
+  status?: SessionStatus;
+  /** Filter by game ID. */
+  game_id?: string;
+  /** Sort field with direction prefix (e.g., '-last_active_at'). */
+  sort?: string;
+  /** Page number (1-indexed). */
+  page?: number;
+  /** Page size. */
+  page_size?: number;
+}
+
+/** Payload for updating a session's status. */
+export interface SessionStatusUpdate {
+  status: SessionStatus;
+}

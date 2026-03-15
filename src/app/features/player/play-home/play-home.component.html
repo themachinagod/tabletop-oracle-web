@@ -1,0 +1,91 @@
+<section class="play-home">
+  <header class="play-home__header">
+    <h1 class="play-home__title">Your Sessions</h1>
+    <button
+      class="play-home__new-session"
+      type="button"
+      (click)="navigateToGames()"
+      aria-label="Start a new session"
+    >
+      New Session
+    </button>
+  </header>
+
+  @if (error()) {
+    <app-error-banner [message]="error()!" (dismissed)="dismissError()" />
+  }
+
+  @if (loading()) {
+    <app-loading-spinner message="Loading sessions..." />
+  } @else {
+    @if (showNoGamesState()) {
+      <app-empty-state
+        message="No games are available yet. Check back later or contact your curator."
+      />
+    } @else if (showNoSessionsState()) {
+      <app-empty-state
+        message="No active sessions. Pick a game to get started."
+        actionLabel="Browse Games"
+        (actionClicked)="navigateToGames()"
+      />
+    } @else {
+      @if (gameFilterOptions().length > 0) {
+        <div class="play-home__filters">
+          <label class="play-home__filter-label" for="game-filter">Filter by game</label>
+          <select
+            id="game-filter"
+            class="play-home__game-select"
+            [value]="selectedGameId()"
+            (change)="onGameFilterChange($any($event.target).value)"
+          >
+            <option value="">All Games</option>
+            @for (game of gameFilterOptions(); track game.id) {
+              <option [value]="game.id">{{ game.name }}</option>
+            }
+          </select>
+        </div>
+      }
+
+      @if (activeSessions().length > 0) {
+        <app-session-list
+          [sessions]="activeSessions()"
+          (sessionSelected)="onSessionSelected($event)"
+          (restoreRequested)="onRestoreSession($event)"
+        />
+
+        @if (activePagination(); as pagination) {
+          @if (pagination.total_pages > 1) {
+            <app-pagination [pagination]="pagination" (pageChange)="onPageChange($event)" />
+          }
+        }
+      }
+
+      <div class="play-home__archived-toggle">
+        <label class="play-home__toggle-label">
+          <input
+            type="checkbox"
+            class="play-home__toggle-input"
+            [checked]="showArchived()"
+            (change)="toggleArchived()"
+          />
+          <span class="play-home__toggle-text">Show Archived</span>
+        </label>
+      </div>
+
+      @if (showArchived()) {
+        @if (archivedLoading()) {
+          <app-loading-spinner message="Loading archived sessions..." />
+        } @else if (archivedSessions().length > 0) {
+          <h2 class="play-home__section-title">Archived Sessions</h2>
+          <app-session-list
+            [sessions]="archivedSessions()"
+            (sessionSelected)="onSessionSelected($event)"
+            (restoreRequested)="onRestoreSession($event)"
+          />
+        } @else {
+          <p class="play-home__no-archived">No archived sessions.</p>
+        }
+      }
+    }
+  }
+</section>
