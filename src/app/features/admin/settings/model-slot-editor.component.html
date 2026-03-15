@@ -1,0 +1,164 @@
+<div class="slot-editor">
+  <div class="slot-editor__header">
+    <div class="slot-editor__title">
+      <h3 class="slot-editor__capability">{{ capabilityLabel() }}</h3>
+      <span class="slot-editor__model-info"> {{ slot().provider }} / {{ slot().model_id }} </span>
+    </div>
+    @if (!editing()) {
+      <button
+        class="slot-editor__edit-btn"
+        type="button"
+        (click)="startEditing()"
+        aria-label="Edit {{ capabilityLabel() }} model slot"
+      >
+        Edit
+      </button>
+    }
+  </div>
+
+  @if (!editing()) {
+    <div class="slot-editor__details">
+      <div class="slot-editor__detail-row">
+        <span class="slot-editor__detail-label">Temperature</span>
+        <span class="slot-editor__detail-value">
+          {{ slot().temperature !== null ? slot().temperature : 'Default' }}
+        </span>
+      </div>
+      <div class="slot-editor__detail-row">
+        <span class="slot-editor__detail-label">Max Tokens/Call</span>
+        <span class="slot-editor__detail-value">
+          {{ slot().max_tokens_per_call !== null ? slot().max_tokens_per_call : 'Default' }}
+        </span>
+      </div>
+      @if (slot().fallback_provider) {
+        <div class="slot-editor__detail-row">
+          <span class="slot-editor__detail-label">Fallback</span>
+          <span class="slot-editor__detail-value">
+            {{ slot().fallback_provider }} / {{ slot().fallback_model_id }}
+          </span>
+        </div>
+      }
+    </div>
+  } @else {
+    @if (error()) {
+      <app-error-banner [message]="error()!" (dismissed)="error.set(null)" />
+    }
+
+    <form class="slot-editor__form" [formGroup]="form" (ngSubmit)="save()">
+      <div class="slot-editor__form-row">
+        <div class="slot-editor__field">
+          <label class="slot-editor__label" [for]="'provider-' + slot().capability">
+            Provider <span class="slot-editor__required">*</span>
+          </label>
+          <input
+            [id]="'provider-' + slot().capability"
+            class="slot-editor__input"
+            [class.slot-editor__input--error]="hasError('provider')"
+            formControlName="provider"
+            type="text"
+            placeholder="e.g. openai"
+          />
+          @if (hasError('provider')) {
+            <span class="slot-editor__error" role="alert">Provider is required.</span>
+          }
+        </div>
+        <div class="slot-editor__field">
+          <label class="slot-editor__label" [for]="'model_id-' + slot().capability">
+            Model ID <span class="slot-editor__required">*</span>
+          </label>
+          <input
+            [id]="'model_id-' + slot().capability"
+            class="slot-editor__input"
+            [class.slot-editor__input--error]="hasError('model_id')"
+            formControlName="model_id"
+            type="text"
+            placeholder="e.g. gpt-4o"
+          />
+          @if (hasError('model_id')) {
+            <span class="slot-editor__error" role="alert">Model ID is required.</span>
+          }
+        </div>
+      </div>
+
+      <div class="slot-editor__form-row">
+        <div class="slot-editor__field">
+          <label class="slot-editor__label" [for]="'temperature-' + slot().capability">
+            Temperature
+          </label>
+          <input
+            [id]="'temperature-' + slot().capability"
+            class="slot-editor__input"
+            [class.slot-editor__input--error]="hasError('temperature')"
+            formControlName="temperature"
+            type="number"
+            min="0"
+            max="2"
+            step="0.1"
+            placeholder="Default"
+          />
+          @if (hasError('temperature')) {
+            <span class="slot-editor__error" role="alert">Must be between 0 and 2.</span>
+          }
+        </div>
+        <div class="slot-editor__field">
+          <label class="slot-editor__label" [for]="'max_tokens-' + slot().capability">
+            Max Tokens/Call
+          </label>
+          <input
+            [id]="'max_tokens-' + slot().capability"
+            class="slot-editor__input"
+            [class.slot-editor__input--error]="hasError('max_tokens_per_call')"
+            formControlName="max_tokens_per_call"
+            type="number"
+            min="1"
+            placeholder="Default"
+          />
+          @if (hasError('max_tokens_per_call')) {
+            <span class="slot-editor__error" role="alert">Must be a positive integer.</span>
+          }
+        </div>
+      </div>
+
+      <div class="slot-editor__form-row">
+        <div class="slot-editor__field">
+          <label class="slot-editor__label" [for]="'fallback_provider-' + slot().capability">
+            Fallback Provider
+          </label>
+          <input
+            [id]="'fallback_provider-' + slot().capability"
+            class="slot-editor__input"
+            formControlName="fallback_provider"
+            type="text"
+            placeholder="Optional"
+          />
+        </div>
+        <div class="slot-editor__field">
+          <label class="slot-editor__label" [for]="'fallback_model-' + slot().capability">
+            Fallback Model ID
+          </label>
+          <input
+            [id]="'fallback_model-' + slot().capability"
+            class="slot-editor__input"
+            formControlName="fallback_model_id"
+            type="text"
+            placeholder="Optional"
+          />
+        </div>
+      </div>
+
+      <div class="slot-editor__actions">
+        <button
+          class="slot-editor__cancel-btn"
+          type="button"
+          (click)="cancelEditing()"
+          [disabled]="saving()"
+        >
+          Cancel
+        </button>
+        <button class="slot-editor__save-btn" type="submit" [disabled]="saving()">
+          {{ saving() ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </form>
+  }
+</div>

@@ -51,7 +51,7 @@ export class AdminSidebarComponent {
       disabled: true,
       exact: false,
     },
-    { label: 'Settings', route: '/admin/settings', icon: '\u2699', disabled: true, exact: false },
+    { label: 'Settings', route: '/admin/settings', icon: '\u2699', disabled: false, exact: false },
     { label: 'Usage', route: '/admin/usage', icon: '\u{1F4CA}', disabled: true, exact: false },
   ];
 

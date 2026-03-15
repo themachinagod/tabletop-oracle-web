@@ -1,0 +1,207 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.slot-editor {
+  background: $color-bg-secondary;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+}
+
+.slot-editor__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-md;
+}
+
+.slot-editor__title {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.slot-editor__capability {
+  @include heading-sm;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+.slot-editor__model-info {
+  @include body-sm;
+  color: $color-text-muted;
+}
+
+.slot-editor__edit-btn {
+  @include body-sm;
+  background: transparent;
+  color: $color-accent-primary;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  padding: $spacing-xs $spacing-sm;
+  cursor: pointer;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $color-accent-muted;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.slot-editor__details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md $spacing-xl;
+}
+
+.slot-editor__detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.slot-editor__detail-label {
+  @include label;
+  color: $color-text-muted;
+}
+
+.slot-editor__detail-value {
+  @include body-base;
+  color: $color-text-secondary;
+}
+
+.slot-editor__form {
+  margin-top: $spacing-sm;
+}
+
+.slot-editor__form-row {
+  display: flex;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.slot-editor__field {
+  flex: 1;
+}
+
+.slot-editor__label {
+  @include body-sm;
+  display: block;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+  font-weight: $font-weight-medium;
+}
+
+.slot-editor__required {
+  color: $color-error;
+}
+
+.slot-editor__input {
+  @include body-base;
+  width: 100%;
+  background: $color-bg-surface;
+  color: $color-text-primary;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-md;
+  min-height: $touch-target-min;
+  transition: border-color $transition-fast;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: $color-text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-accent-primary;
+  }
+
+  &--error {
+    border-color: $color-error;
+  }
+}
+
+.slot-editor__error {
+  @include body-xs;
+  display: block;
+  color: $color-error;
+  margin-top: $spacing-xs;
+}
+
+.slot-editor__actions {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: flex-end;
+  margin-top: $spacing-md;
+}
+
+.slot-editor__cancel-btn {
+  @include body-base;
+  background: transparent;
+  color: $color-text-secondary;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  min-height: $touch-target-min;
+  font-weight: $font-weight-medium;
+  transition: background $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $color-bg-surface;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.slot-editor__save-btn {
+  @include body-base;
+  background: $color-accent-primary;
+  color: $color-text-primary;
+  border: none;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  min-height: $touch-target-min;
+  font-weight: $font-weight-medium;
+  transition: background $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $color-accent-hover;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .slot-editor__form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .slot-editor__field {
+    margin-bottom: $spacing-md;
+  }
+}

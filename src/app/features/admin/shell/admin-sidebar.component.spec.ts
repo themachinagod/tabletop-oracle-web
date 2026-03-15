@@ -31,20 +31,21 @@ describe('AdminSidebarComponent', () => {
     expect(component.navItems[0].disabled).toBe(false);
   });
 
-  it('navItems_Enabled_OnlyGameLibrary', () => {
+  it('navItems_Enabled_GameLibraryAndSettings', () => {
     const enabledItems = component.navItems.filter((item) => !item.disabled);
-    expect(enabledItems.length).toBe(1);
+    expect(enabledItems.length).toBe(2);
     expect(enabledItems[0].label).toBe('Game Library');
+    expect(enabledItems[1].label).toBe('Settings');
   });
 
-  it('navItems_Disabled_IncludesAllStubs', () => {
+  it('navItems_Disabled_IncludesRemainingStubs', () => {
     const disabledLabels = component.navItems
       .filter((item) => item.disabled)
       .map((item) => item.label);
     expect(disabledLabels).toContain('Knowledge Graph');
     expect(disabledLabels).toContain('Sessions');
-    expect(disabledLabels).toContain('Settings');
     expect(disabledLabels).toContain('Usage');
+    expect(disabledLabels).not.toContain('Settings');
   });
 
   it('render_AllItems_RendersCorrectLinkCount', () => {
@@ -55,24 +56,24 @@ describe('AdminSidebarComponent', () => {
 
   it('render_EnabledItems_RenderedAsAnchorTags', () => {
     const anchors = fixture.nativeElement.querySelectorAll('a.admin-sidebar__link');
-    // Game Library + Switch to Play
-    expect(anchors.length).toBe(2);
+    // Game Library + Settings + Switch to Play
+    expect(anchors.length).toBe(3);
   });
 
   it('render_DisabledItems_RenderedAsSpans', () => {
     const spans = fixture.nativeElement.querySelectorAll('span.admin-sidebar__link--disabled');
-    expect(spans.length).toBe(4);
+    expect(spans.length).toBe(3);
   });
 
   it('render_DisabledItems_ShowSoonBadge', () => {
     const badges = fixture.nativeElement.querySelectorAll('.admin-sidebar__badge');
-    expect(badges.length).toBe(4);
+    expect(badges.length).toBe(3);
     expect(badges[0].textContent.trim()).toBe('Soon');
   });
 
   it('render_DisabledItems_HaveAriaDisabled', () => {
     const disabled = fixture.nativeElement.querySelectorAll('[aria-disabled="true"]');
-    expect(disabled.length).toBe(4);
+    expect(disabled.length).toBe(3);
   });
 
   it('render_Footer_ContainsSwitchToPlayLink', () => {

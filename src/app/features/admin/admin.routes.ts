@@ -7,7 +7,7 @@ import { GameEditComponent } from './game-management/game-edit.component';
 import { DocumentDetailComponent } from './document-management/document-detail.component';
 import { KgSummaryPlaceholderComponent } from './stubs/kg-summary-placeholder.component';
 import { SessionBrowserPlaceholderComponent } from './stubs/session-browser-placeholder.component';
-import { SettingsPlaceholderComponent } from './stubs/settings-placeholder.component';
+import { SettingsPageComponent } from './settings/settings-page.component';
 import { UsageDashboardPlaceholderComponent } from './stubs/usage-dashboard-placeholder.component';
 
 /**
@@ -29,7 +29,7 @@ export const ADMIN_ROUTES: Routes = [
       { path: 'games/:gameId/documents/:documentId', component: DocumentDetailComponent },
       { path: 'knowledge-graph', component: KgSummaryPlaceholderComponent },
       { path: 'sessions', component: SessionBrowserPlaceholderComponent },
-      { path: 'settings', component: SettingsPlaceholderComponent },
+      { path: 'settings', component: SettingsPageComponent },
       { path: 'usage', component: UsageDashboardPlaceholderComponent },
     ],
   },
