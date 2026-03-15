@@ -47,6 +47,18 @@
 
     <div class="doc-detail__sections">
       <section class="doc-detail__section">
+        <h2 class="doc-detail__section-title">Processing Status</h2>
+        <app-document-processing-status
+          [documentId]="currentDocumentId"
+          [status]="doc.status"
+          [errorMessage]="doc.error_message"
+          [chunkCount]="doc.chunk_count"
+          [processedAt]="doc.processed_at"
+          (processingChanged)="onProcessingChanged()"
+        />
+      </section>
+
+      <section class="doc-detail__section">
         <h2 class="doc-detail__section-title">Metadata</h2>
         <app-document-metadata
           [document]="doc"
