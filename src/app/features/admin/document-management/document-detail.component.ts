@@ -9,6 +9,7 @@ import { AdminExpansionService } from '../../../core/services/admin-expansion.se
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ErrorBannerComponent } from '../../../shared/components/error-banner/error-banner.component';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
+import { DocumentContentPreviewComponent } from './document-content-preview.component';
 import { DocumentMetadataComponent } from './document-metadata.component';
 import { DocumentProcessingStatusComponent } from './document-processing-status.component';
 import { DocumentStatusBadgeComponent } from './document-status-badge.component';
@@ -29,6 +30,7 @@ import { DocumentVersionHistoryComponent } from './document-version-history.comp
   standalone: true,
   imports: [
     ConfirmDialogComponent,
+    DocumentContentPreviewComponent,
     DocumentMetadataComponent,
     DocumentProcessingStatusComponent,
     DocumentStatusBadgeComponent,

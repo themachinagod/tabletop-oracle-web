@@ -11,6 +11,7 @@ describe('DocumentDetailComponent', () => {
   let fixture: ComponentFixture<DocumentDetailComponent>;
   let mockDocumentService: {
     getDocument: ReturnType<typeof vi.fn>;
+    getContentPreview: ReturnType<typeof vi.fn>;
     deleteDocument: ReturnType<typeof vi.fn>;
     retryProcessing: ReturnType<typeof vi.fn>;
     getVersionHistory: ReturnType<typeof vi.fn>;
@@ -43,6 +44,23 @@ describe('DocumentDetailComponent', () => {
   beforeEach(async () => {
     mockDocumentService = {
       getDocument: vi.fn().mockReturnValue(of(mockDoc)),
+      getContentPreview: vi.fn().mockReturnValue(
+        of({
+          document_id: 'doc-1',
+          format: 'pdf',
+          sections: [],
+          tables: [],
+          image_descriptions: [],
+          stats: {
+            total_sections: 0,
+            total_tables: 0,
+            total_images: 0,
+            total_chunks: 0,
+            total_characters: 0,
+            estimated_tokens: 0,
+          },
+        }),
+      ),
       deleteDocument: vi.fn().mockReturnValue(of(undefined)),
       retryProcessing: vi.fn().mockReturnValue(of(mockDoc)),
       getVersionHistory: vi.fn().mockReturnValue(of([])),
