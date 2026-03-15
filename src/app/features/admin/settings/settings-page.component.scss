@@ -1,0 +1,29 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.settings-page {
+  padding: $spacing-lg;
+  max-width: 900px;
+}
+
+.settings-page__title {
+  @include heading-xl;
+  color: $color-text-primary;
+  margin: 0 0 $spacing-xl 0;
+}
+
+.settings-page__section {
+  margin-bottom: $spacing-xxl;
+}
+
+.settings-page__section-title {
+  @include heading-lg;
+  color: $color-text-primary;
+  margin: 0 0 $spacing-sm 0;
+}
+
+.settings-page__section-description {
+  @include body-base;
+  color: $color-text-muted;
+  margin: 0 0 $spacing-lg 0;
+}

@@ -1,0 +1,249 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.guardrail-config {
+  background: $color-bg-secondary;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+}
+
+.guardrail-config__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.guardrail-config__badge {
+  @include body-sm;
+  display: inline-block;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-pill;
+  font-weight: $font-weight-medium;
+
+  &--enabled {
+    background: rgba($color-success, 0.15);
+    color: $color-success;
+  }
+
+  &--disabled {
+    background: rgba($color-warning, 0.15);
+    color: $color-warning;
+  }
+}
+
+.guardrail-config__edit-btn {
+  @include body-sm;
+  background: transparent;
+  color: $color-accent-primary;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  padding: $spacing-xs $spacing-sm;
+  cursor: pointer;
+  transition: background $transition-fast;
+
+  &:hover {
+    background: $color-accent-muted;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.guardrail-config__limits {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: $spacing-md;
+}
+
+.guardrail-config__limit-row {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.guardrail-config__limit-label {
+  @include label;
+  color: $color-text-muted;
+}
+
+.guardrail-config__limit-value {
+  @include body-base;
+  color: $color-text-secondary;
+}
+
+.guardrail-config__form {
+  margin-top: $spacing-sm;
+}
+
+.guardrail-config__toggle-field {
+  margin-bottom: $spacing-lg;
+}
+
+.guardrail-config__toggle-label {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+}
+
+.guardrail-config__checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: $color-accent-primary;
+  cursor: pointer;
+}
+
+.guardrail-config__toggle-text {
+  @include body-base;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.guardrail-config__toggle-hint {
+  @include body-sm;
+  color: $color-text-muted;
+}
+
+.guardrail-config__limit-fields {
+  transition: opacity $transition-base;
+
+  &--muted {
+    opacity: 0.5;
+  }
+}
+
+.guardrail-config__form-row {
+  display: flex;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.guardrail-config__field {
+  flex: 1;
+}
+
+.guardrail-config__label {
+  @include body-sm;
+  display: block;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-xs;
+  font-weight: $font-weight-medium;
+}
+
+.guardrail-config__input {
+  @include body-base;
+  width: 100%;
+  background: $color-bg-surface;
+  color: $color-text-primary;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-md;
+  min-height: $touch-target-min;
+  transition: border-color $transition-fast;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: $color-text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-accent-primary;
+  }
+
+  &--error {
+    border-color: $color-error;
+  }
+}
+
+.guardrail-config__error {
+  @include body-xs;
+  display: block;
+  color: $color-error;
+  margin-top: $spacing-xs;
+}
+
+.guardrail-config__actions {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: flex-end;
+  margin-top: $spacing-lg;
+}
+
+.guardrail-config__cancel-btn {
+  @include body-base;
+  background: transparent;
+  color: $color-text-secondary;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  min-height: $touch-target-min;
+  font-weight: $font-weight-medium;
+  transition: background $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $color-bg-surface;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+.guardrail-config__save-btn {
+  @include body-base;
+  background: $color-accent-primary;
+  color: $color-text-primary;
+  border: none;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-lg;
+  cursor: pointer;
+  min-height: $touch-target-min;
+  font-weight: $font-weight-medium;
+  transition: background $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: $color-accent-hover;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .guardrail-config__form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .guardrail-config__field {
+    margin-bottom: $spacing-md;
+  }
+
+  .guardrail-config__toggle-label {
+    flex-wrap: wrap;
+  }
+
+  .guardrail-config__toggle-hint {
+    flex-basis: 100%;
+    margin-left: 28px;
+  }
+}

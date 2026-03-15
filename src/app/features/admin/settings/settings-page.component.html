@@ -1,0 +1,40 @@
+<div class="settings-page">
+  <h1 class="settings-page__title">Settings</h1>
+
+  <section class="settings-page__section">
+    <h2 class="settings-page__section-title">AI Model Configuration</h2>
+    <p class="settings-page__section-description">
+      Configure which AI model is used for each capability. Changes take effect immediately for new
+      requests.
+    </p>
+
+    @if (slotsError()) {
+      <app-error-banner [message]="slotsError()!" (dismissed)="retryLoadSlots()" />
+    } @else if (modelSlots()) {
+      @for (slot of modelSlots(); track slot.capability) {
+        <app-model-slot-editor [slot]="slot" (slotUpdated)="onSlotUpdated($event)" />
+      }
+    } @else {
+      <app-loading-spinner message="Loading model slots..." />
+    }
+  </section>
+
+  <section class="settings-page__section">
+    <h2 class="settings-page__section-title">Token Guardrails</h2>
+    <p class="settings-page__section-description">
+      Configure usage limits. When enforcement is disabled, usage is tracked but limits are not
+      enforced.
+    </p>
+
+    @if (guardrailError()) {
+      <app-error-banner [message]="guardrailError()!" (dismissed)="retryLoadGuardrail()" />
+    } @else if (guardrailConfig()) {
+      <app-guardrail-config
+        [config]="guardrailConfig()!"
+        (configUpdated)="onConfigUpdated($event)"
+      />
+    } @else {
+      <app-loading-spinner message="Loading guardrail configuration..." />
+    }
+  </section>
+</div>

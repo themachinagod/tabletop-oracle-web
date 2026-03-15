@@ -1,0 +1,232 @@
+<div class="guardrail-config">
+  <div class="guardrail-config__header">
+    <div class="guardrail-config__status">
+      <span
+        class="guardrail-config__badge"
+        [class.guardrail-config__badge--enabled]="config().enforcement_enabled"
+        [class.guardrail-config__badge--disabled]="!config().enforcement_enabled"
+      >
+        {{ config().enforcement_enabled ? 'Enforcing' : 'Tracking Only' }}
+      </span>
+    </div>
+    @if (!editing()) {
+      <button
+        class="guardrail-config__edit-btn"
+        type="button"
+        (click)="startEditing()"
+        aria-label="Edit guardrail configuration"
+      >
+        Edit
+      </button>
+    }
+  </div>
+
+  @if (!editing()) {
+    <div class="guardrail-config__limits">
+      <div class="guardrail-config__limit-row">
+        <span class="guardrail-config__limit-label">Max Tokens Per Query</span>
+        <span class="guardrail-config__limit-value">
+          {{ config().max_tokens_per_query !== null ? config().max_tokens_per_query : 'Unlimited' }}
+        </span>
+      </div>
+      <div class="guardrail-config__limit-row">
+        <span class="guardrail-config__limit-label">Max Model Calls Per Query</span>
+        <span class="guardrail-config__limit-value">
+          {{
+            config().max_model_calls_per_query !== null
+              ? config().max_model_calls_per_query
+              : 'Unlimited'
+          }}
+        </span>
+      </div>
+      <div class="guardrail-config__limit-row">
+        <span class="guardrail-config__limit-label">Max Queries Per Session</span>
+        <span class="guardrail-config__limit-value">
+          {{
+            config().max_queries_per_session !== null
+              ? config().max_queries_per_session
+              : 'Unlimited'
+          }}
+        </span>
+      </div>
+      <div class="guardrail-config__limit-row">
+        <span class="guardrail-config__limit-label">Daily Token Budget</span>
+        <span class="guardrail-config__limit-value">
+          {{ config().daily_token_budget !== null ? config().daily_token_budget : 'Unlimited' }}
+        </span>
+      </div>
+      <div class="guardrail-config__limit-row">
+        <span class="guardrail-config__limit-label">Daily Query Budget</span>
+        <span class="guardrail-config__limit-value">
+          {{ config().daily_query_budget !== null ? config().daily_query_budget : 'Unlimited' }}
+        </span>
+      </div>
+      <div class="guardrail-config__limit-row">
+        <span class="guardrail-config__limit-label">Per-Document Ingestion Limit</span>
+        <span class="guardrail-config__limit-value">
+          {{
+            config().per_document_ingestion_limit !== null
+              ? config().per_document_ingestion_limit
+              : 'Unlimited'
+          }}
+        </span>
+      </div>
+    </div>
+  } @else {
+    @if (error()) {
+      <app-error-banner [message]="error()!" (dismissed)="error.set(null)" />
+    }
+
+    <form class="guardrail-config__form" [formGroup]="form" (ngSubmit)="save()">
+      <div class="guardrail-config__toggle-field">
+        <label class="guardrail-config__toggle-label" for="enforcement_enabled">
+          <input
+            id="enforcement_enabled"
+            class="guardrail-config__checkbox"
+            formControlName="enforcement_enabled"
+            type="checkbox"
+            (change)="onEnforcementChange()"
+          />
+          <span class="guardrail-config__toggle-text">Enforcement Enabled</span>
+          <span class="guardrail-config__toggle-hint">
+            {{
+              enforcementEnabled()
+                ? 'Limits are actively enforced'
+                : 'Usage tracked but limits not enforced'
+            }}
+          </span>
+        </label>
+      </div>
+
+      <div
+        class="guardrail-config__limit-fields"
+        [class.guardrail-config__limit-fields--muted]="!enforcementEnabled()"
+      >
+        <div class="guardrail-config__form-row">
+          <div class="guardrail-config__field">
+            <label class="guardrail-config__label" for="max_tokens_per_query">
+              Max Tokens Per Query
+            </label>
+            <input
+              id="max_tokens_per_query"
+              class="guardrail-config__input"
+              [class.guardrail-config__input--error]="hasError('max_tokens_per_query')"
+              formControlName="max_tokens_per_query"
+              type="number"
+              min="1"
+              placeholder="Unlimited"
+            />
+            @if (hasError('max_tokens_per_query')) {
+              <span class="guardrail-config__error" role="alert">Must be a positive integer.</span>
+            }
+          </div>
+          <div class="guardrail-config__field">
+            <label class="guardrail-config__label" for="max_model_calls_per_query">
+              Max Model Calls Per Query
+            </label>
+            <input
+              id="max_model_calls_per_query"
+              class="guardrail-config__input"
+              [class.guardrail-config__input--error]="hasError('max_model_calls_per_query')"
+              formControlName="max_model_calls_per_query"
+              type="number"
+              min="1"
+              placeholder="Unlimited"
+            />
+            @if (hasError('max_model_calls_per_query')) {
+              <span class="guardrail-config__error" role="alert">Must be a positive integer.</span>
+            }
+          </div>
+        </div>
+
+        <div class="guardrail-config__form-row">
+          <div class="guardrail-config__field">
+            <label class="guardrail-config__label" for="max_queries_per_session">
+              Max Queries Per Session
+            </label>
+            <input
+              id="max_queries_per_session"
+              class="guardrail-config__input"
+              [class.guardrail-config__input--error]="hasError('max_queries_per_session')"
+              formControlName="max_queries_per_session"
+              type="number"
+              min="1"
+              placeholder="Unlimited"
+            />
+            @if (hasError('max_queries_per_session')) {
+              <span class="guardrail-config__error" role="alert">Must be a positive integer.</span>
+            }
+          </div>
+          <div class="guardrail-config__field">
+            <label class="guardrail-config__label" for="daily_token_budget">
+              Daily Token Budget
+            </label>
+            <input
+              id="daily_token_budget"
+              class="guardrail-config__input"
+              [class.guardrail-config__input--error]="hasError('daily_token_budget')"
+              formControlName="daily_token_budget"
+              type="number"
+              min="1"
+              placeholder="Unlimited"
+            />
+            @if (hasError('daily_token_budget')) {
+              <span class="guardrail-config__error" role="alert">Must be a positive integer.</span>
+            }
+          </div>
+        </div>
+
+        <div class="guardrail-config__form-row">
+          <div class="guardrail-config__field">
+            <label class="guardrail-config__label" for="daily_query_budget">
+              Daily Query Budget
+            </label>
+            <input
+              id="daily_query_budget"
+              class="guardrail-config__input"
+              [class.guardrail-config__input--error]="hasError('daily_query_budget')"
+              formControlName="daily_query_budget"
+              type="number"
+              min="1"
+              placeholder="Unlimited"
+            />
+            @if (hasError('daily_query_budget')) {
+              <span class="guardrail-config__error" role="alert">Must be a positive integer.</span>
+            }
+          </div>
+          <div class="guardrail-config__field">
+            <label class="guardrail-config__label" for="per_document_ingestion_limit">
+              Per-Document Ingestion Limit
+            </label>
+            <input
+              id="per_document_ingestion_limit"
+              class="guardrail-config__input"
+              [class.guardrail-config__input--error]="hasError('per_document_ingestion_limit')"
+              formControlName="per_document_ingestion_limit"
+              type="number"
+              min="1"
+              placeholder="Unlimited"
+            />
+            @if (hasError('per_document_ingestion_limit')) {
+              <span class="guardrail-config__error" role="alert">Must be a positive integer.</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="guardrail-config__actions">
+        <button
+          class="guardrail-config__cancel-btn"
+          type="button"
+          (click)="cancelEditing()"
+          [disabled]="saving()"
+        >
+          Cancel
+        </button>
+        <button class="guardrail-config__save-btn" type="submit" [disabled]="saving()">
+          {{ saving() ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </form>
+  }
+</div>
