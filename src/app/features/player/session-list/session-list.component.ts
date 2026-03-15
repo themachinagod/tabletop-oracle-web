@@ -29,7 +29,7 @@ import { SessionCardComponent } from '../../../shared/components/session-card/se
             <button
               class="session-list__restore"
               type="button"
-              (click)="restoreRequested.emit(session); $event.stopPropagation()"
+              (click)="restoreRequested.emit(session)"
               aria-label="Restore session"
             >
               Restore

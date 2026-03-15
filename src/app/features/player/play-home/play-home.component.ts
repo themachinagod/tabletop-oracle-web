@@ -70,7 +70,14 @@ export class PlayHomeComponent implements OnInit {
   /** Whether the system has no games at all (distinct from no sessions). */
   readonly noGamesExist = signal(false);
 
-  /** Game filter options extracted from active sessions. */
+  /**
+   * Game filter options extracted from active sessions.
+   *
+   * TODO: This derives filter options from the current page of sessions only.
+   * When GameService is implemented (#106), replace with a dedicated call to
+   * fetch all games that have active sessions, ensuring the dropdown shows
+   * the complete set regardless of pagination.
+   */
   readonly gameFilterOptions = computed<GameFilterOption[]>(() => {
     const sessions = this.activeSessions();
     const gameMap = new Map<string, string>();
@@ -103,7 +110,7 @@ export class PlayHomeComponent implements OnInit {
   }
 
   /** Load active sessions with current filter and page. */
-  loadActiveSessions(page = 1): void {
+  private loadActiveSessions(page = 1): void {
     this.loading.set(true);
     this.error.set(null);
 
