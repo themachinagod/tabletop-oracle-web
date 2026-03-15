@@ -2,6 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PaginatedResult } from '../../models/api.model';
+import { DocumentContent } from '../../models/document-content.model';
 import {
   DocumentDetail,
   DocumentFilters,
@@ -160,6 +161,17 @@ export class AdminDocumentService {
    */
   getVersionHistory(gameId: string, documentId: string): Observable<DocumentVersion[]> {
     return this.api.get<DocumentVersion[]>(`/games/${gameId}/documents/${documentId}/versions`);
+  }
+
+  /**
+   * Get extracted content preview for a processed document.
+   *
+   * @param gameId - The parent game ID.
+   * @param documentId - The document ID.
+   * @returns Observable of the document content with sections, tables, images, and stats.
+   */
+  getContentPreview(gameId: string, documentId: string): Observable<DocumentContent> {
+    return this.api.get<DocumentContent>(`/games/${gameId}/documents/${documentId}/preview`);
   }
 
   /**

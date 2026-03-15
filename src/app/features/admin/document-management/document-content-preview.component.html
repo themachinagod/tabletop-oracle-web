@@ -1,0 +1,125 @@
+@if (error()) {
+  <app-error-banner [message]="error()!" (dismissed)="dismissError()" />
+}
+
+@if (loading()) {
+  <app-loading-spinner message="Loading content preview..." />
+} @else if (content(); as c) {
+  <div class="content-preview">
+    <!-- Stats summary -->
+    <div class="content-preview__stats">
+      <div class="content-preview__stat">
+        <span class="content-preview__stat-value">{{ formatNumber(c.stats.total_sections) }}</span>
+        <span class="content-preview__stat-label">Sections</span>
+      </div>
+      <div class="content-preview__stat">
+        <span class="content-preview__stat-value">{{ formatNumber(c.stats.total_tables) }}</span>
+        <span class="content-preview__stat-label">Tables</span>
+      </div>
+      <div class="content-preview__stat">
+        <span class="content-preview__stat-value">{{ formatNumber(c.stats.total_images) }}</span>
+        <span class="content-preview__stat-label">Images</span>
+      </div>
+      <div class="content-preview__stat">
+        <span class="content-preview__stat-value">{{ formatNumber(c.stats.total_chunks) }}</span>
+        <span class="content-preview__stat-label">Chunks</span>
+      </div>
+      <div class="content-preview__stat">
+        <span class="content-preview__stat-value">{{ formatNumber(c.stats.estimated_tokens) }}</span>
+        <span class="content-preview__stat-label">Tokens</span>
+      </div>
+    </div>
+
+    <!-- Section tree -->
+    @if (c.sections.length > 0) {
+      <div class="content-preview__tree" role="tree" aria-label="Document sections">
+        <ng-container
+          *ngTemplateOutlet="sectionList; context: { $implicit: c.sections, parentPath: '' }"
+        />
+      </div>
+    }
+
+    <!-- Tables summary -->
+    @if (c.tables.length > 0) {
+      <div class="content-preview__group">
+        <h3 class="content-preview__group-title">Tables</h3>
+        <div class="content-preview__table-list">
+          @for (table of c.tables; track table.caption + table.section_path) {
+            <div class="content-preview__table-item">
+              <span class="content-preview__table-caption">{{ table.caption }}</span>
+              <span class="content-preview__table-meta">
+                {{ table.headers.join(', ') }} &middot; {{ table.row_count }} rows
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Image descriptions -->
+    @if (c.image_descriptions.length > 0) {
+      <div class="content-preview__group">
+        <h3 class="content-preview__group-title">Images</h3>
+        <div class="content-preview__image-list">
+          @for (img of c.image_descriptions; track img.location + img.description) {
+            <div class="content-preview__image-item">
+              <span class="content-preview__image-location">{{ img.location }}</span>
+              <span class="content-preview__image-desc">{{ img.description }}</span>
+              <span class="content-preview__image-confidence">
+                Confidence: {{ formatConfidence(img.confidence) }}
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}
+
+<!-- Recursive section template -->
+<ng-template #sectionList let-sections let-parentPath="parentPath">
+  @for (section of sections; track section.title; let i = $index) {
+    @let path = buildSectionPath(parentPath, i);
+    @let collapsed = isSectionCollapsed(path);
+    @let hasChildren = section.children && section.children.length > 0;
+
+    <div class="content-preview__node" role="treeitem" [attr.aria-expanded]="hasChildren ? !collapsed : null">
+      <div class="content-preview__node-header">
+        @if (hasChildren) {
+          <button
+            class="content-preview__toggle"
+            type="button"
+            (click)="toggleSection(path)"
+            [attr.aria-label]="collapsed ? 'Expand ' + section.title : 'Collapse ' + section.title"
+          >
+            <span class="content-preview__toggle-icon" [class.content-preview__toggle-icon--collapsed]="collapsed">
+              &#9662;
+            </span>
+          </button>
+        } @else {
+          <span class="content-preview__toggle-placeholder"></span>
+        }
+        <span class="content-preview__node-title" [class]="'content-preview__node-title--level-' + section.level">
+          {{ section.title }}
+        </span>
+        @if (section.page_number !== null) {
+          <span class="content-preview__page-number">p. {{ section.page_number }}</span>
+        }
+      </div>
+
+      @if (!collapsed) {
+        @if (section.content) {
+          <div class="content-preview__node-content">{{ section.content }}</div>
+        }
+
+        @if (hasChildren) {
+          <div class="content-preview__node-children" role="group">
+            <ng-container
+              *ngTemplateOutlet="sectionList; context: { $implicit: section.children, parentPath: path }"
+            />
+          </div>
+        }
+      }
+    </div>
+  }
+</ng-template>

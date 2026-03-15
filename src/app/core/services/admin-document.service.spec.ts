@@ -236,4 +236,24 @@ describe('AdminDocumentService', () => {
       expect(mockApi.get).toHaveBeenCalledWith('/games/game-1/documents/doc-1/versions');
     });
   });
+
+  describe('getContentPreview', () => {
+    it('getContentPreview_ValidIds_CallsPreviewEndpoint', async () => {
+      const mockContent = { document_id: 'doc-1', format: 'pdf', sections: [], tables: [], image_descriptions: [], stats: {} };
+      mockApi.get.mockReturnValue(of(mockContent));
+
+      const result = await firstValueFrom(service.getContentPreview('game-1', 'doc-1'));
+
+      expect(result).toEqual(mockContent);
+      expect(mockApi.get).toHaveBeenCalledWith('/games/game-1/documents/doc-1/preview');
+    });
+
+    it('getContentPreview_ApiError_PropagatesError', async () => {
+      mockApi.get.mockReturnValue(throwError(() => new Error('Not found')));
+
+      await expect(firstValueFrom(service.getContentPreview('game-1', 'doc-1'))).rejects.toThrow(
+        'Not found',
+      );
+    });
+  });
 });
