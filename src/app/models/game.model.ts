@@ -27,8 +27,38 @@ export interface GameSummary {
   updated_at: string;
 }
 
+/** Expansion detail returned within a game detail response. */
+export interface ExpansionDetail {
+  id: string;
+  name: string;
+  description: string | null;
+  year_published: number | null;
+  is_active: boolean;
+}
+
 /** Full game detail including expansions (from GET /games/:id). */
 export interface GameDetail extends GameSummary {
   created_by: string;
   archived_at: string | null;
+  expansions: ExpansionDetail[];
+}
+
+/** Sorting options for game list endpoint. */
+export type GameSortOption = 'name' | '-updated_at' | '-created_at';
+
+/** Filter parameters for the game list endpoint. */
+export interface GameFilters {
+  search?: string;
+  player_count?: number;
+  complexity?: ComplexityLevel[];
+  tags?: string[];
+  sort?: GameSortOption;
+  page?: number;
+  page_size?: number;
+}
+
+/** Tag with usage count returned by the tags endpoint. */
+export interface TagCount {
+  tag: string;
+  count: number;
 }

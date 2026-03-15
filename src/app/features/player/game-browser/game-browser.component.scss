@@ -1,0 +1,59 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.game-browser {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-lg $spacing-md;
+}
+
+.game-browser__header {
+  margin-bottom: $spacing-lg;
+}
+
+.game-browser__title {
+  @include heading-xl;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+.game-browser__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xl;
+}
+
+.game-browser__card-wrapper {
+  cursor: pointer;
+  border-radius: $radius-lg;
+  transition: transform $transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent-primary;
+    outline-offset: 2px;
+    border-radius: $radius-lg;
+  }
+}
+
+// ── Responsive grid ─────────────────────────────────────────────────
+@media (max-width: $breakpoint-lg) {
+  .game-browser__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .game-browser {
+    padding: $spacing-md $spacing-sm;
+  }
+
+  .game-browser__grid {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+}

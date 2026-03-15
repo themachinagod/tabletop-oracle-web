@@ -1,0 +1,42 @@
+@use 'variables' as *;
+@use 'typography' as *;
+
+.expansion-list__title {
+  @include heading-sm;
+  color: $color-text-primary;
+  margin: 0 0 $spacing-md;
+}
+
+.expansion-list__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.expansion-list__item {
+  background: $color-bg-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-md;
+}
+
+.expansion-list__name {
+  @include body-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.expansion-list__year {
+  @include body-xs;
+  color: $color-text-muted;
+  margin-left: $spacing-xs;
+}
+
+.expansion-list__description {
+  @include body-xs;
+  color: $color-text-secondary;
+  margin: $spacing-xs 0 0;
+}

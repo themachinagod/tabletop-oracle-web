@@ -1,0 +1,80 @@
+<section class="game-detail">
+  @if (error()) {
+    <app-error-banner [message]="error()!" (dismissed)="dismissError()" />
+  }
+
+  @if (loading()) {
+    <app-loading-spinner message="Loading game details..." />
+  } @else if (game(); as game) {
+    <button class="game-detail__back" type="button" (click)="goBack()">
+      &lsaquo; Back to Games
+    </button>
+
+    <header class="game-detail__header">
+      <div class="game-detail__image">
+        @if (game.cover_image_url) {
+          <img
+            [src]="game.cover_image_url"
+            [alt]="game.name + ' cover image'"
+            class="game-detail__cover"
+          />
+        } @else {
+          <div class="game-detail__placeholder" aria-hidden="true">🎲</div>
+        }
+      </div>
+
+      <div class="game-detail__info">
+        <h1 class="game-detail__name">{{ game.name }}</h1>
+
+        @if (publisherYear) {
+          <p class="game-detail__publisher">{{ publisherYear }}</p>
+        }
+
+        @if (game.edition) {
+          <p class="game-detail__edition">Edition: {{ game.edition }}</p>
+        }
+
+        <div class="game-detail__meta">
+          @if (playerCountDisplay) {
+            <span class="game-detail__players">{{ playerCountDisplay }}</span>
+          }
+          @if (game.complexity) {
+            <app-complexity-badge [level]="game.complexity" />
+          }
+        </div>
+
+        @if (game.tags.length > 0) {
+          <div class="game-detail__tags">
+            @for (tag of game.tags; track $index) {
+              <app-tag-chip [tag]="tag" />
+            }
+          </div>
+        }
+
+        @if (game.document_count > 0) {
+          <p class="game-detail__documents">
+            This game has {{ game.document_count }} document{{
+              game.document_count === 1 ? '' : 's'
+            }}
+            available.
+          </p>
+        }
+
+        <button class="game-detail__start-session" type="button" (click)="startSession()">
+          Start Session
+        </button>
+      </div>
+    </header>
+
+    @if (game.description) {
+      <div class="game-detail__description">
+        <h2 class="game-detail__section-title">About</h2>
+        <p class="game-detail__description-text">{{ game.description }}</p>
+      </div>
+    }
+
+    @if (game.expansions.length > 0) {
+      <app-expansion-list [expansions]="game.expansions" />
+    }
+  }
+</section>
